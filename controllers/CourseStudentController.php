@@ -7,8 +7,6 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use app\models\Course;
-use app\models\User;
 
 /**
  * CourseStudentController implements the CRUD actions for CourseStudent model.
@@ -40,19 +38,8 @@ class CourseStudentController extends Controller
      */
     public function actionIndex()
     {
-        //$courses = Course::getCourses();
-        $courses = Course::findOne(1);
-        
-        $users = $courses->courseStudents;
-        echo "<pre>";
-        var_dump($users[0]->student_id);
-        echo "</pre>";
-        exit();
-        
-        $students = CourseStudent::find()->all();
-        
         $dataProvider = new ActiveDataProvider([
-           'query' => CourseStudent::find(),
+            'query' => CourseStudent::find(),
             /*
             'pagination' => [
                 'pageSize' => 50
@@ -67,8 +54,6 @@ class CourseStudentController extends Controller
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
-            'courses' => $courses,
-            'students' => $students
         ]);
     }
 
@@ -93,30 +78,17 @@ class CourseStudentController extends Controller
     public function actionCreate()
     {
         $model = new CourseStudent();
-        $courses = Course::getCourses();
-        $students = User::getFullName(true);
+
         if ($this->request->isPost) {
-            $courseId = $this->request->post()['CourseStudent']["course_id"];
-            $students = $this->request->post()['CourseStudent']["student_id"];
-            foreach ($students as $student){
-                $model = new CourseStudent();
-                $model->course_id = $courseId;
-                $model->student_id = $student;
-                $model->save();
+            if ($model->load($this->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
             }
-            return $this->redirect(['index']);
-              
-//            if ($model->load($this->request->post()) && $model->save()) {
-//                return $this->redirect(['view', 'id' => $model->id]);
-//            }
         } else {
             $model->loadDefaultValues();
         }
 
         return $this->render('create', [
-            'model' => new CourseStudent(),
-            'courses' => $courses,
-            'students' => $students,
+            'model' => $model,
         ]);
     }
 

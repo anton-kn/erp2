@@ -32,7 +32,7 @@ class UserController extends Controller
                     'only' => ['logout', 'index'],
                     'rules' => [
                         [
-                            'actions' => ['logout', 'index', 'user/index'],
+                            'actions' => ['logout', 'index'],
                             'allow' => true,
                             'matchCallback' => function() use($user) {
                                 return $user->is_admin;                                
@@ -79,7 +79,6 @@ class UserController extends Controller
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
-            //'type' => $type
         ]);
     }
 
@@ -130,13 +129,6 @@ class UserController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        
-//        $post = $this->request->post();
-//        echo "<pre>";
-//        var_dump($post['Course']);
-//        echo "</pre>";
-//        exit();
-        
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
