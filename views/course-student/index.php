@@ -53,6 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $name->firstname . " " . $name->surname . " " . $name->patronymic;
                 }
             ],
+            'course_id',
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, CourseStudent $model, $key, $index, $column) {

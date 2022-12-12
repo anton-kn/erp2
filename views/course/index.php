@@ -4,7 +4,7 @@ use app\models\Course;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
-//use yii\grid\GridView;
+use yii\grid\GridView;
 use yii\widgets\Pjax;
 use app\models\User;
 use Yii;

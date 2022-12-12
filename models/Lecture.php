@@ -31,7 +31,7 @@ class Lecture extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['num', 'name', 'course_id', 'rate'], 'required'],
+            [['num', 'name', 'course_id'], 'required'],
             [['num', 'course_id'], 'default', 'value' => null],
             [['num', 'course_id'], 'integer'],
             [['rate'], 'number'],
@@ -47,8 +47,8 @@ class Lecture extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'num' => 'Порядковый номер',
-            'name' => 'Тема лекции',
+            'num' => 'Номер',
+            'name' => 'Тема',
             'course_id' => 'Курс',
             'rate' => 'Оценка',
         ];
@@ -71,5 +71,17 @@ class Lecture extends \yii\db\ActiveRecord
     public static function find()
     {
         return new LectureQuery(get_called_class());
+    }
+    
+    /**
+     * Функция присваивает порядковый номер лекции
+     * $count = 0 return $num = 1
+     * $count = n (т.е. $count > 0) return $num = n+1 
+     * @param type $count
+     */
+    
+    public function valueNum($count)
+    {
+        
     }
 }

@@ -153,17 +153,18 @@ class User extends \yii\db\ActiveRecord
     
     /**
      * 
-     * @return возвращает id - аутентифицированного пользователя
+     * @return возвращает id - аутентифицированного пользователя студента или преподавателя
+     * и объект администратора
      */
-    public static function getIdentityUserId(){
+    public static function getIdentityUser(){
         if(isset(Yii::$app->user->identity->user) && Yii::$app->user->identity->user->type == self::TYPE_ADMIN){
-            return Yii::$app->user->identity->user->id;
+            return Yii::$app->user->identity->user;
         }
         if(isset(Yii::$app->user->identity->user) && Yii::$app->user->identity->user->type == self::TYPE_TEACHER){
-            return Yii::$app->user->identity->user->id;
+            return Yii::$app->user->identity->user;
         }
         if(isset(Yii::$app->user->identity->user) && Yii::$app->user->identity->user->type == self::TYPE_STUDENT){
-            return Yii::$app->user->identity->user->id;
+            return Yii::$app->user->identity->user;
         }
         return null;
     }

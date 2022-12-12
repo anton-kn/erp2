@@ -11,8 +11,15 @@ use Yii;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $type = Yii::$app->request->get('type');
-$this->title = 'Новый '. User::getUsers()[$type];
-$this->params['breadcrumbs'][] = $this->title;
+if(Yii::$app->user->identity->user->type == User::getTeacher()){
+    $this->title = 'Студенты';
+    $this->params['breadcrumbs'][] = $this->title;
+}
+if(Yii::$app->user->identity->user->is_admin){
+    $this->title = 'Новый '. User::getUsers()[$type];
+    $this->params['breadcrumbs'][] = $this->title;
+}
+
 
 ?>
 <div class="user-index">
@@ -20,11 +27,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
+        <?php if(Yii::$app->user->identity->user->is_admin) { ?>
         <?= Html::a("Новый " . User::getUsers()[$type], ['create', 'type' => $type], [ 'class' => 'btn btn-success']) ?>
-    </p>
-    
-    <p>
-        <?php // var_dump(Yii::$app->request->get('type'));?>
+        <?php }?>
     </p>
     
     <?php Pjax::begin(); ?>
@@ -40,7 +45,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'patronymic',
             'email:email',
             'phone',
-            //'password_hash',
             'comment',
             'type' =>
             [
@@ -49,8 +53,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     if(isset($data->type)) {return User::getUsers()[$data->type];}
                 },
             ],
-            
-//            'is_admin:boolean',
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, User $model, $key, $index, $column) use ($type) {

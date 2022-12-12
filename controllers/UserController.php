@@ -9,50 +9,58 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use Yii;
+
 /**
  * UserController implements the CRUD actions for User model.
  */
-class UserController extends Controller
-{
-    
-    private function getUser() :?User {
+class UserController extends Controller {
+
+    private function getUser(): ?User {
         return Yii::$app->user->isGuest ? null : Yii::$app->user->identity->user;
     }
-    
+
     /**
      * @inheritDoc
      */
     public function behaviors() {
         $user = $this->getUser();
         return array_merge(
-            parent::behaviors(),
-            [
-                'access' => [
-                    'class' => AccessControl::class,
-                    'only' => ['logout', 'index'],
-                    'rules' => [
+                parent::behaviors(),
+                ['access' => [
+                        'class' => AccessControl::class,
+                        'only' => ['logout', 'index', 'create', 'update', 'view', 'delete'],
+                        'rules' =>
                         [
-                            'actions' => ['logout', 'index'],
-                            'allow' => true,
-                            'matchCallback' => function() use($user) {
-                                return $user->is_admin;                                
-                            },
-                            'roles' => ['@'],
-                        ],
-                        [
-                            'allow' => true,
-                            'actions' => ['login'],
-                            'roles' => ['?'],
+                            [
+                                'actions' => ['logout', 'index', 'create', 'update', 'view', 'delete'],
+                                'allow' => true,
+                                'matchCallback' => function ($rule, $action) use ($user) {
+                                    return $user->is_admin;
+                                },
+                                'roles' => ['@'],
+                            ],
+                            [
+                                'actions' => ['logout', 'index'],
+                                'allow' => true,
+                                'matchCallback' => function ($rule, $action) use ($user) {
+                                    return $user->type == User::getTeacher();
+                                },
+                                'roles' => ['@'],
+                            ],
+                            [
+                                'allow' => true,
+                                'actions' => ['login'],
+                                'roles' => ['?'],
+                            ],
                         ],
                     ],
-                ],
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+                    'verbs' => [
+                        'class' => VerbFilter::className(),
+                        'actions' => [
+                            'delete' => ['POST'],
+                        ],
                     ],
-                ],
-            ]
+                ]
         );
     }
 
@@ -61,24 +69,23 @@ class UserController extends Controller
      *
      * @return string
      */
-    public function actionIndex($type)
-    {
+    public function actionIndex($type) {
         $dataProvider = new ActiveDataProvider([
             'query' => User::find()->where(['type' => $type]),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
+                /*
+                  'pagination' => [
+                  'pageSize' => 50
+                  ],
+                  'sort' => [
+                  'defaultOrder' => [
+                  'id' => SORT_DESC,
+                  ]
+                  ],
+                 */
         ]);
 
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+                    'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -88,10 +95,9 @@ class UserController extends Controller
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
-    {
+    public function actionView($id) {
         return $this->render('view', [
-            'model' => $this->findModel($id),
+                    'model' => $this->findModel($id),
         ]);
     }
 
@@ -100,14 +106,13 @@ class UserController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate()
-    {
+    public function actionCreate() {
         $model = new User();
 
         if ($this->request->isPost) {
             $model->beforeSave(true);
             if ($model->load($this->request->post()) && $model->save()) {
-                
+
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
@@ -115,7 +120,7 @@ class UserController extends Controller
         }
 
         return $this->render('create', [
-            'model' => $model,
+                    'model' => $model,
         ]);
     }
 
@@ -126,15 +131,14 @@ class UserController extends Controller
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
-    {
+    public function actionUpdate($id) {
         $model = $this->findModel($id);
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
-            'model' => $model,
+                    'model' => $model,
         ]);
     }
 
@@ -145,8 +149,7 @@ class UserController extends Controller
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
-    {
+    public function actionDelete($id) {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
@@ -159,12 +162,12 @@ class UserController extends Controller
      * @return User the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
-    {
+    protected function findModel($id) {
         if (($model = User::findOne(['id' => $id])) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('Такой страницы не существует!');
     }
+
 }
