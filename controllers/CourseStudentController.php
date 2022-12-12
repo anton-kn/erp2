@@ -7,6 +7,8 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Course;
+use app\models\User;
 
 /**
  * CourseStudentController implements the CRUD actions for CourseStudent model.
@@ -36,10 +38,24 @@ class CourseStudentController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
+    public function actionIndex($id = null)
     {
+        // находим первый курс
+        if($id == null) {
+            $minId = Course::find()->min('id');
+        }else{
+            $minId = $id;
+        }
+//        echo "<pre>";
+//        var_dump($course->name);
+//        echo "</pre>";
+//        exit();
+        
+        $course = Course::findOne($minId);
+        $query = CourseStudent::find()->where(['course_id' => $minId]);
+        
         $dataProvider = new ActiveDataProvider([
-            'query' => CourseStudent::find(),
+            'query' => $query
             /*
             'pagination' => [
                 'pageSize' => 50
@@ -54,6 +70,8 @@ class CourseStudentController extends Controller
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'model' => $course,
+            'courses' => Course::find()->all(),
         ]);
     }
 
@@ -78,7 +96,6 @@ class CourseStudentController extends Controller
     public function actionCreate()
     {
         $model = new CourseStudent();
-
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -89,6 +106,8 @@ class CourseStudentController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'user' => User::getFullName(true),
+            'course' => Course::getCourses(),
         ]);
     }
 
@@ -109,6 +128,8 @@ class CourseStudentController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'user' => User::getFullName(true),
+            'course' => Course::getCourses(),
         ]);
     }
 

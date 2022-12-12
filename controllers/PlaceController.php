@@ -2,19 +2,16 @@
 
 namespace app\controllers;
 
-use app\models\Course;
+use app\models\Place;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use app\models\User;
-use yii\filters\AccessControl;
-use Yii;
 
 /**
- * CourseController implements the CRUD actions for Course model.
+ * PlaceController implements the CRUD actions for Place model.
  */
-class CourseController extends Controller
+class PlaceController extends Controller
 {
     /**
      * @inheritDoc
@@ -24,22 +21,6 @@ class CourseController extends Controller
         return array_merge(
             parent::behaviors(),
             [
-                'access' => [
-                    'class' => AccessControl::class,
-                    'only' => ['logout', 'index'],
-                    'rules' => [
-                        [
-                            'actions' => ['logout', 'index'],
-                            'allow' => true,
-                            'roles' => ['@'],
-                        ],
-                        [
-                            'allow' => true,
-                            'actions' => ['login'],
-                            'roles' => ['?'],
-                        ],
-                    ],
-                ],
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
@@ -51,17 +32,14 @@ class CourseController extends Controller
     }
 
     /**
-     * Lists all Course models.
+     * Lists all Place models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $identityId = User::getIdentityUserId();
-        $query = Course::find()->where(['teacher_id' => $identityId]);
-        
         $dataProvider = new ActiveDataProvider([
-            'query' => $query,
+            'query' => Place::find(),
             /*
             'pagination' => [
                 'pageSize' => 50
@@ -80,7 +58,7 @@ class CourseController extends Controller
     }
 
     /**
-     * Displays a single Course model.
+     * Displays a single Place model.
      * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -93,14 +71,14 @@ class CourseController extends Controller
     }
 
     /**
-     * Creates a new Course model.
+     * Creates a new Place model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new Course();
-            
+        $model = new Place();
+
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -111,12 +89,11 @@ class CourseController extends Controller
 
         return $this->render('create', [
             'model' => $model,
-            'teacher' => User::getFullName(),
         ]);
     }
 
     /**
-     * Updates an existing Course model.
+     * Updates an existing Place model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
      * @return string|\yii\web\Response
@@ -132,12 +109,11 @@ class CourseController extends Controller
 
         return $this->render('update', [
             'model' => $model,
-            'teacher' => User::getFullName(),
         ]);
     }
 
     /**
-     * Deletes an existing Course model.
+     * Deletes an existing Place model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return \yii\web\Response
@@ -151,15 +127,15 @@ class CourseController extends Controller
     }
 
     /**
-     * Finds the Course model based on its primary key value.
+     * Finds the Place model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return Course the loaded model
+     * @return Place the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Course::findOne(['id' => $id])) !== null) {
+        if (($model = Place::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

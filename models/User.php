@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use app\models\CourseStudent;
 
 /**
  * This is the model class for table "user".
@@ -143,9 +144,28 @@ class User extends \yii\db\ActiveRecord
         $users = self::find()->where(['type' => $type])->all();
         $teachers = [];
         foreach ($users as $user) {
-            $teachers[$user->id] = $user->firstname . " " . $user->surname . " " . $user->patronymic;
+            if(!CourseStudent::checkStudent($user->id)){
+                $teachers[$user->id] = $user->firstname . " " . $user->surname . " " . $user->patronymic;
+            }
         }
         return $teachers;
+    }
+    
+    /**
+     * 
+     * @return возвращает id - аутентифицированного пользователя
+     */
+    public static function getIdentityUserId(){
+        if(isset(Yii::$app->user->identity->user) && Yii::$app->user->identity->user->type == self::TYPE_ADMIN){
+            return Yii::$app->user->identity->user->id;
+        }
+        if(isset(Yii::$app->user->identity->user) && Yii::$app->user->identity->user->type == self::TYPE_TEACHER){
+            return Yii::$app->user->identity->user->id;
+        }
+        if(isset(Yii::$app->user->identity->user) && Yii::$app->user->identity->user->type == self::TYPE_STUDENT){
+            return Yii::$app->user->identity->user->id;
+        }
+        return null;
     }
 
 }

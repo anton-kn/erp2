@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use app\models\User;
 
 /**
  * This is the model class for table "course_student".
@@ -78,5 +79,18 @@ class CourseStudent extends \yii\db\ActiveRecord
     public static function find()
     {
         return new CourseStudentQuery(get_called_class());
+    }
+    
+    /**
+     * Проверка студента: один курс - один студент
+     * @property int id 
+     */
+    public static function checkStudent($id){
+        $user = User::findOne($id);
+        $check = self::find()->where(['student_id' => $user->id])->one();
+        if ($check){
+            return true;
+        }
+        return false;
     }
 }

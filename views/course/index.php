@@ -4,9 +4,11 @@ use app\models\Course;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
-use yii\grid\GridView;
+//use yii\grid\GridView;
 use yii\widgets\Pjax;
 use app\models\User;
+use Yii;
+use yii\widgets\ListView;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
@@ -17,12 +19,15 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
+    <p> 
+        <?php if(Yii::$app->user->identity->user->type == User::getAdmin()) { ?>
         <?= Html::a('Новый курс', ['create'], ['class' => 'btn btn-success']) ?>
+        <?php } ?>
     </p>
 
     <?php Pjax::begin(); ?>
-
+    
+    
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
@@ -31,7 +36,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'date_start',
             'date_end',
-            'status',
+            'status' => 
+            [
+                'attribute' => 'status',
+                'value' => function($data){
+                    return Course::getStatus()[$data->status];
+                },
+            ],
             'teacher_id' => [
                 'attribute' => 'teacher_id',
                 'value' => function($data) {
@@ -41,6 +52,19 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'rate_med',
             [
+            'class' => 'yii\grid\ActionColumn',
+            'template' => '{course}',
+            'visibleButtons' => [
+                'course' => true,
+            ],
+            'buttons' => [
+                'course' => function ($url,$model,$key) {
+//                    $url = Url::to(['/lecture/index']);
+                    return Html::a('Лекции', ['lecture/create'], ['class' => 'btn btn-link']);
+                },
+                ],
+            ],
+            [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Course $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
@@ -48,7 +72,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
     ]); ?>
-
+    
     <?php Pjax::end(); ?>
 
 </div>
