@@ -6,6 +6,7 @@ use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use app\models\User;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
@@ -15,10 +16,12 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="place-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
+    
+    <?php if(Yii::$app->user->identity->user->type == User::getAdmin()) { ?>
     <p>
         <?= Html::a('Create Place', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
+    <?php } ?>
 
     <?php Pjax::begin(); ?>
 

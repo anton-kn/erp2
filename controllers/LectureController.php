@@ -15,11 +15,12 @@ use yii\filters\AccessControl;
 /**
  * LectureController implements the CRUD actions for Lecture model.
  */
-class LectureController extends Controller 
-{
+class LectureController extends Controller {
+
     private function getUser(): ?User {
         return Yii::$app->user->isGuest ? null : Yii::$app->user->identity->user;
     }
+
     /**
      * @inheritDoc
      */
@@ -42,20 +43,25 @@ class LectureController extends Controller
                                 'roles' => ['@'],
                             ],
                             [
-                                'allow' => true,
-                                'actions' => ['login'],
-                                'roles' => ['?'],
-                            ],
-                        ],
-                        'rules' =>
-                        [
-                            [
                                 'actions' => ['logout', 'index', 'create', 'update', 'view', 'delete'],
                                 'allow' => true,
                                 'matchCallback' => function ($rule, $action) use ($user) {
                                     return $user->type == User::getTeacher();
                                 },
                                 'roles' => ['@'],
+                            ],
+                            [
+                                'actions' => ['logout', 'index'],
+                                'allow' => true,
+                                'matchCallback' => function ($rule, $action) use ($user) {
+                                    return $user->type == User::getStudent();
+                                },
+                                'roles' => ['@'],
+                            ],
+                            [
+                                'allow' => true,
+                                'actions' => ['login'],
+                                'roles' => ['?'],
                             ],
                         ],
                     ],
@@ -75,8 +81,34 @@ class LectureController extends Controller
      * @return string
      */
     public function actionIndex() {
+        $identityUser = User::getIdentityUser();
+        if ($identityUser->type == User::getTeacher()) {
+            $courses = Course::find()->where(['teacher_id' => $identityUser->id])->all(); //все курсы преподавателя
+        }
+        // необходимо доработать
+        if ($identityUser->type == User::getStudent()) {
+            $courses = Course::find()->where(['teacher_id' => $identityUser->id])->all(); //все курсы преподавателя
+        }
+        
+        $courseId = Yii::$app->request->get('id');
+        if ($courseId) {
+            // текущий курс преподавателя
+            $course = Course::find()->where(['id' => $courseId])->one();
+            $courseId = $course->id;
+        } else {
+            // первый курс преподавателя
+            $courseId = Course::find()->where(['teacher_id' => $identityUser->id])->min('id');
+//            $lectures = $course->lectures;
+        }
+//        
+//        echo '<pre>';
+//        var_dump($course);
+//        echo '</pre>';
+//        exit();
+
         $dataProvider = new ActiveDataProvider([
-            'query' => Lecture::find(),
+            'query' => Lecture::find()->where(['course_id' => $courseId]), // лекции для одного курса
+//            'query' => lectures::find(),
                 /*
                   'pagination' => [
                   'pageSize' => 50
@@ -91,6 +123,7 @@ class LectureController extends Controller
 
         return $this->render('index', [
                     'dataProvider' => $dataProvider,
+                    'courses' => $courses,
         ]);
     }
 

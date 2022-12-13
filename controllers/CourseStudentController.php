@@ -76,7 +76,7 @@ class CourseStudentController extends Controller {
         $userIdentity = User::getIdentityUser();
 
         $courseId = null;
-        if (isset($userIdentity->is_admin)) {         // если администратор
+        if (isset($userIdentity->is_admin)) {   // если администратор
             if ($id == null) {
                 // находим первый курс
                 $courseId = Course::find()->min('id');
@@ -97,10 +97,7 @@ class CourseStudentController extends Controller {
             $courses = Course::find()->where(['teacher_id' => $userIdentity->id])->all();
         }
         $course = Course::findOne($courseId);
-//        echo '<pre>';
-//        var_dump($course->id);
-//        echo '</pre>';
-//        exit();
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => CourseStudent::find()->where(['course_id' => $courseId])

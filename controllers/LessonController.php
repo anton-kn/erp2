@@ -2,8 +2,8 @@
 
 namespace app\controllers;
 
-use app\models\Place;
-use yii\data\ActiveDataProvider;
+use app\models\Lesson;
+use app\models\LessonSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -12,9 +12,9 @@ use yii\filters\AccessControl;
 use app\models\User;
 
 /**
- * PlaceController implements the CRUD actions for Place model.
+ * LessonController implements the CRUD actions for Lesson model.
  */
-class PlaceController extends Controller {
+class LessonController extends Controller {
 
     private function getUser(): ?User {
         return Yii::$app->user->isGuest ? null : Yii::$app->user->identity->user;
@@ -35,14 +35,6 @@ class PlaceController extends Controller {
                         [
                             [
                                 'actions' => ['logout', 'index', 'create', 'update', 'view', 'delete'],
-                                'allow' => true,
-                                'matchCallback' => function ($rule, $action) use ($user) {
-                                    return $user->is_admin;
-                                },
-                                'roles' => ['@'],
-                            ],
-                            [
-                                'actions' => ['logout', 'index'],
                                 'allow' => true,
                                 'matchCallback' => function ($rule, $action) use ($user) {
                                     return $user->type == User::getTeacher();
@@ -67,32 +59,22 @@ class PlaceController extends Controller {
     }
 
     /**
-     * Lists all Place models.
+     * Lists all Lesson models.
      *
      * @return string
      */
     public function actionIndex() {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Place::find(),
-                /*
-                  'pagination' => [
-                  'pageSize' => 50
-                  ],
-                  'sort' => [
-                  'defaultOrder' => [
-                  'id' => SORT_DESC,
-                  ]
-                  ],
-                 */
-        ]);
+        $searchModel = new LessonSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
+                    'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * Displays a single Place model.
+     * Displays a single Lesson model.
      * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -104,12 +86,12 @@ class PlaceController extends Controller {
     }
 
     /**
-     * Creates a new Place model.
+     * Creates a new Lesson model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate() {
-        $model = new Place();
+        $model = new Lesson();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -125,7 +107,7 @@ class PlaceController extends Controller {
     }
 
     /**
-     * Updates an existing Place model.
+     * Updates an existing Lesson model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
      * @return string|\yii\web\Response
@@ -144,7 +126,7 @@ class PlaceController extends Controller {
     }
 
     /**
-     * Deletes an existing Place model.
+     * Deletes an existing Lesson model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return \yii\web\Response
@@ -157,14 +139,14 @@ class PlaceController extends Controller {
     }
 
     /**
-     * Finds the Place model based on its primary key value.
+     * Finds the Lesson model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return Place the loaded model
+     * @return Lesson the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id) {
-        if (($model = Place::findOne(['id' => $id])) !== null) {
+        if (($model = Lesson::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use app\models\User;
+use app\models\Course;
 
 /**
  * This is the model class for table "course_student".
@@ -70,6 +71,11 @@ class CourseStudent extends \yii\db\ActiveRecord
     public function getStudent()
     {
         return $this->hasOne(User::class, ['id' => 'student_id']);
+    }
+    
+    public function getCourseStudent()
+    {
+        return $this->hasOne(Course::class, ['id' => 'course_id']);
     }
 
     /**

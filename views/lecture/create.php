@@ -23,7 +23,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
         <?= $form->field($model, 'course_id')->dropDownList($courses) ?>
 
-
         <div class="form-group">
             <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
         </div>

@@ -10,6 +10,7 @@ use yii\filters\VerbFilter;
 use app\models\User;
 use yii\filters\AccessControl;
 use Yii;
+use app\models\CourseStudent;
 
 /**
  * CourseController implements the CRUD actions for Course model.
@@ -50,13 +51,19 @@ class CourseController extends Controller {
                                 'roles' => ['@'],
                             ],
                             [
+                                'actions' => ['logout', 'index'],
+                                'allow' => true,
+                                'matchCallback' => function ($rule, $action) use ($user) {
+                                    return $user->type == User::getStudent();
+                                },
+                                'roles' => ['@'],
+                            ],
+                            [
                                 'allow' => true,
                                 'actions' => ['login'],
                                 'roles' => ['?'],
                             ],
                         ],
-                        
-                        
                     ],
                     'verbs' => [
                         'class' => VerbFilter::className(),
@@ -78,12 +85,24 @@ class CourseController extends Controller {
         if (isset($identityUser->is_admin)) {
             $query = Course::find();
         }
-        if(isset($identityUser) && $identityUser->type == User::getTeacher()){
+        if (isset($identityUser) && $identityUser->type == User::getTeacher()) {
             $query = Course::find()->where(['teacher_id' => $identityUser->id]);
+        }
+        if (isset($identityUser) && $identityUser->type == User::getStudent()) {
+            $courseStudent = CourseStudent::find()->where(['student_id' => $identityUser->id])->one();
+            $query = Course::find()->where(['id' => $courseStudent->course_id]);
+            //$course = $courseStudent->courseStudent;
+//            echo '<pre>';
+//            var_dump($query);
+//            echo '</pre>';
+//            exit();
+            
+            //$query = $courseStudent->courseStudent;
         }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            
                 /*
                   'pagination' => [
                   'pageSize' => 50

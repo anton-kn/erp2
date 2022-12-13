@@ -8,6 +8,7 @@ use yii\grid\GridView;
 use yii\widgets\Pjax;
 use yii\widgets\DetailView;
 use app\models\User;
+use Yii;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
@@ -26,10 +27,12 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="course-student-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
+    
+    <?php if(Yii::$app->user->identity->user->is_admin) {  ?>
     <p>
         <?= Html::a('Создать группу', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
+    <?php }?>
 
     <?php Pjax::begin(); ?>
     

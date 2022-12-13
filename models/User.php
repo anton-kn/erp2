@@ -136,6 +136,7 @@ class User extends \yii\db\ActiveRecord
         
     /**
      * Возвращает полные имена всех пользователей
+     * Пользователи возвращаются только те, которые не записаны на курс
      * @param type $const - true - студенты, false - преподаватели 
      */
     
@@ -144,7 +145,7 @@ class User extends \yii\db\ActiveRecord
         $users = self::find()->where(['type' => $type])->all();
         $teachers = [];
         foreach ($users as $user) {
-            if(!CourseStudent::checkStudent($user->id)){
+            if(!CourseStudent::checkStudent($user->id)){ // если студент не записан на курс более одного раза
                 $teachers[$user->id] = $user->firstname . " " . $user->surname . " " . $user->patronymic;
             }
         }

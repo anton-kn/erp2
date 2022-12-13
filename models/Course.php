@@ -93,6 +93,10 @@ class Course extends \yii\db\ActiveRecord
     public function getCourseStudents(){
         return $this->hasMany(CourseStudent::class, ['course_id' => 'id']);
     }
+    
+    public function getLectures(){
+        return $this->hasMany(Lecture::class, ['course_id' => 'id']);
+    }
 
     /**
      * {@inheritdoc}
