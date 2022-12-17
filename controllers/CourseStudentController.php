@@ -11,6 +11,7 @@ use app\models\Course;
 use app\models\User;
 use Yii;
 use yii\filters\AccessControl;
+use app\models\CourseStudentSearch;
 
 /**
  * CourseStudentController implements the CRUD actions for CourseStudent model.
@@ -72,51 +73,40 @@ class CourseStudentController extends Controller {
      *
      * @return string
      */
-    public function actionIndex($id = null) {
+    public function actionIndex() {
+        $searchModel = new CourseStudentSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
+//        $courses = Course::find()->all();
+        
         $userIdentity = User::getIdentityUser();
-
-        $courseId = null;
-        if (isset($userIdentity->is_admin)) {   // если администратор
-            if ($id == null) {
-                // находим первый курс
-                $courseId = Course::find()->min('id');
-            } else {
-                $courseId = $id;
-            }
-
+//        $courseId = null;
+        if (isset($userIdentity->type) && $userIdentity->type == User::getAdmin()) {   // если администратор
             $courses = Course::find()->all();
         }
-
-        if (isset($userIdentity->type) && $userIdentity->type == User::getTeacher()) {     // если преподаватель
-            if ($id == null) {
-                // находим первый курс преподавателя
-                $courseId = Course::find()->where(['teacher_id' => $userIdentity->id])->min('id');
-            } else {
-                $courseId = $id;
-            }
+        
+        if (isset($userIdentity->type) && $userIdentity->type == User::getTeacher()) {   // если администратор
             $courses = Course::find()->where(['teacher_id' => $userIdentity->id])->all();
         }
-        $course = Course::findOne($courseId);
-
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => CourseStudent::find()->where(['course_id' => $courseId])
-                /*
-                  'pagination' => [
-                  'pageSize' => 50
-                  ],
-                  'sort' => [
-                  'defaultOrder' => [
-                  'id' => SORT_DESC,
-                  ]
-                  ],
-                 */
-        ]);
+        
+//        if (isset($userIdentity->is_admin)) {   // если администратор
+//            $courses = Course::find()->all();
+//        }
+//            $courses = Course::find()->all();
+//
+//        if (isset($userIdentity->type) && $userIdentity->type == User::getTeacher()) {     // если преподаватель
+//            if ($id == null) {
+//                // находим первый курс преподавателя
+//                $courseId = Course::find()->where(['teacher_id' => $userIdentity->id])->min('id');
+//            } else {
+//                $courseId = $id;
+//            }
+//            $courses = Course::find()->where(['teacher_id' => $userIdentity->id])->all();
+//        
 
         return $this->render('index', [
-                    'dataProvider' => $dataProvider,
-                    'model' => $course,
-                    'courses' => $courses,
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+            'courses' => $courses,
         ]);
     }
 
@@ -128,7 +118,7 @@ class CourseStudentController extends Controller {
      */
     public function actionView($id) {
         return $this->render('view', [
-                    'model' => $this->findModel($id),
+            'model' => $this->findModel($id),
         ]);
     }
 

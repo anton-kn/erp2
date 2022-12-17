@@ -169,5 +169,14 @@ class User extends \yii\db\ActiveRecord
         }
         return null;
     }
+    
+    /**
+     * Все курсы преподавателя
+     */
+    
+    public function getCourses()
+    {
+        return $this->hasMany(Course::class, ['teacher_id' => 'id']);
+    }
 
 }

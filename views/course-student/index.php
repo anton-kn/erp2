@@ -8,26 +8,23 @@ use yii\grid\GridView;
 use yii\widgets\Pjax;
 use yii\widgets\DetailView;
 use app\models\User;
+use app\models\Course;
 use Yii;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Группы по курсам';
+$this->title = 'Студенты курсов';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<div class="list-course">
-    <h3>Список курсов</h3>
-    <p>
-        <?php foreach ($courses as $course) { ?>
-            <?= Html::a($course->name, ['index', 'id' => $course->id], ['class' => 'btn btn-link']) ?>
-        <?php }?>
-    </p>
-</div>
-<div class="course-student-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<div class="course-student-index">
     
+    <h1><?= Html::encode($this->title) ?></h1>
+    <?php foreach ($courses as $course) { ?>
+        <?= Html::a($course->name, ['course-student/index', 'courseId' => $course->id], ['class' => 'btn btn-link'])  ?>
+    <?php } ?>
+
     <?php if(Yii::$app->user->identity->user->is_admin) {  ?>
     <p>
         <?= Html::a('Создать группу', ['create'], ['class' => 'btn btn-success']) ?>
@@ -36,17 +33,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php Pjax::begin(); ?>
     
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'name',
-            //'student_id',
-        ],
-    ]) ?>
-
     <?= GridView::widget([
      'dataProvider' => $dataProvider,
+//     'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'student_id' => [
@@ -56,7 +45,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $name->firstname . " " . $name->surname . " " . $name->patronymic;
                 }
             ],
-            'course_id',
+            'course_id' => [
+                'attribute' => 'course_id',
+                'value' => function ($data) {
+                    $name = Course::find()->where(['id' => $data->course_id])->one();
+                    return $name->name;
+                },
+            ],
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, CourseStudent $model, $key, $index, $column) {

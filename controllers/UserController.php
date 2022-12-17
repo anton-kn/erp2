@@ -9,6 +9,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use Yii;
+use app\models\UserSearch;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -40,7 +41,7 @@ class UserController extends Controller {
                                 'roles' => ['@'],
                             ],
                             [
-                                'actions' => ['logout', 'index'],
+                                'actions' => ['logout'],
                                 'allow' => true,
                                 'matchCallback' => function ($rule, $action) use ($user) {
                                     return $user->type == User::getTeacher();
@@ -70,22 +71,30 @@ class UserController extends Controller {
      * @return string
      */
     public function actionIndex($type) {
-        $dataProvider = new ActiveDataProvider([
-            'query' => User::find()->where(['type' => $type]),
-                /*
-                  'pagination' => [
-                  'pageSize' => 50
-                  ],
-                  'sort' => [
-                  'defaultOrder' => [
-                  'id' => SORT_DESC,
-                  ]
-                  ],
-                 */
-        ]);
+        $searchModel = new UserSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
+//        echo '<pre>';
+//        var_dump($this->request->queryParams['type']);
+//        echo '</pre>';
+//        exit();
+        
+//        $dataProvider = new ActiveDataProvider([
+//            'query' => User::find()->where(['type' => $type]),
+//                /*
+//                  'pagination' => [
+//                  'pageSize' => 50
+//                  ],
+//                  'sort' => [
+//                  'defaultOrder' => [
+//                  'id' => SORT_DESC,
+//                  ]
+//                  ],
+//                 */
+//        ]);
 
         return $this->render('index', [
-                    'dataProvider' => $dataProvider,
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
         ]);
     }
 

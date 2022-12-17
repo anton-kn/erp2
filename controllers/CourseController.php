@@ -11,6 +11,7 @@ use app\models\User;
 use yii\filters\AccessControl;
 use Yii;
 use app\models\CourseStudent;
+use app\models\CourseSearch;
 
 /**
  * CourseController implements the CRUD actions for Course model.
@@ -81,42 +82,12 @@ class CourseController extends Controller {
      * @return string
      */
     public function actionIndex() {
-        $identityUser = User::getIdentityUser();
-        if (isset($identityUser->is_admin)) {
-            $query = Course::find();
-        }
-        if (isset($identityUser) && $identityUser->type == User::getTeacher()) {
-            $query = Course::find()->where(['teacher_id' => $identityUser->id]);
-        }
-        if (isset($identityUser) && $identityUser->type == User::getStudent()) {
-            $courseStudent = CourseStudent::find()->where(['student_id' => $identityUser->id])->one();
-            $query = Course::find()->where(['id' => $courseStudent->course_id]);
-            //$course = $courseStudent->courseStudent;
-//            echo '<pre>';
-//            var_dump($query);
-//            echo '</pre>';
-//            exit();
-            
-            //$query = $courseStudent->courseStudent;
-        }
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-            
-                /*
-                  'pagination' => [
-                  'pageSize' => 50
-                  ],
-                  'sort' => [
-                  'defaultOrder' => [
-                  'id' => SORT_DESC,
-                  ]
-                  ],
-                 */
-        ]);
+        $searchModel = new CourseSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
-                    'dataProvider' => $dataProvider,
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
         ]);
     }
 

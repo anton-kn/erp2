@@ -6,8 +6,8 @@ use yii\bootstrap5\ActiveForm;
 /** @var yii\web\View $this */
 /** @var app\models\Lesson $model */
 
-$this->title = 'Create Lesson';
-$this->params['breadcrumbs'][] = ['label' => 'Lessons', 'url' => ['index']];
+$this->title = 'Создать занятие';
+$this->params['breadcrumbs'][] = ['label' => 'Занятия', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="lesson-create">
@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'lecture_id')->textInput() ?>
+    <?= $form->field($model, 'lecture_id')->dropDownList($lecture) ?>
 
     <?= $form->field($model, 'date')->textInput() ?>
 
@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $form->field($model, 'time_end')->textInput() ?>
 
-    <?= $form->field($model, 'place_id')->textInput() ?>
+    <?= $form->field($model, 'place_id')->dropDownList($place) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

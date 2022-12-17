@@ -10,6 +10,10 @@ use yii\filters\VerbFilter;
 use Yii;
 use yii\filters\AccessControl;
 use app\models\User;
+use app\models\Lecture;
+use app\models\Course;
+use yii\data\ActiveDataProvider;
+use app\models\Place;
 
 /**
  * LessonController implements the CRUD actions for Lesson model.
@@ -34,10 +38,18 @@ class LessonController extends Controller {
                         'rules' =>
                         [
                             [
-                                'actions' => ['logout', 'index', 'create', 'update', 'view', 'delete'],
+                                'actions' => ['logout'],
                                 'allow' => true,
                                 'matchCallback' => function ($rule, $action) use ($user) {
                                     return $user->type == User::getTeacher();
+                                },
+                                'roles' => ['@'],
+                            ],
+                            [
+                                'actions' => ['logout', 'index', 'create', 'update', 'view', 'delete'],
+                                'allow' => true,
+                                'matchCallback' => function ($rule, $action) use ($user) {
+                                    return $user->type == User::getAdmin();
                                 },
                                 'roles' => ['@'],
                             ],
@@ -67,9 +79,15 @@ class LessonController extends Controller {
         $searchModel = new LessonSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+        $dataProviderCourse = new ActiveDataProvider([
+            'query' => Course::find(),
+            
+        ]);
+
         return $this->render('index', [
-                    'searchModel' => $searchModel,
-                    'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'dataProviderCourse' => $dataProviderCourse
         ]);
     }
 
@@ -90,9 +108,20 @@ class LessonController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate() {
+    public function actionCreate($courseId) {
         $model = new Lesson();
+        $lectures = Lecture::find()->where(['course_id' => $courseId])->all();
+        $lectureList = [];
+        foreach ($lectures as $lecture) {
+            $lectureList[$lecture->id] = $lecture->name;
+        }
 
+        $places = Place::find()->all();
+        $placeList = [];
+        foreach ($places as $places) {
+            $placeList[$places->id] = $places->address;
+        }
+        
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -102,7 +131,9 @@ class LessonController extends Controller {
         }
 
         return $this->render('create', [
-                    'model' => $model,
+            'model' => $model,
+            'lecture' => $lectureList,
+            'place' => $placeList,
         ]);
     }
 

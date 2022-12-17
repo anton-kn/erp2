@@ -36,6 +36,7 @@ if(Yii::$app->user->identity->user->is_admin){
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
