@@ -76,37 +76,25 @@ class CourseStudentController extends Controller {
     public function actionIndex() {
         $searchModel = new CourseStudentSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
-//        $courses = Course::find()->all();
         
         $userIdentity = User::getIdentityUser();
-//        $courseId = null;
         if (isset($userIdentity->type) && $userIdentity->type == User::getAdmin()) {   // если администратор
-            $courses = Course::find()->all();
+            $courses = Course::find();
         }
         
         if (isset($userIdentity->type) && $userIdentity->type == User::getTeacher()) {   // если администратор
-            $courses = Course::find()->where(['teacher_id' => $userIdentity->id])->all();
+            $courses = Course::find()->where(['teacher_id' => $userIdentity->id]);
         }
         
-//        if (isset($userIdentity->is_admin)) {   // если администратор
-//            $courses = Course::find()->all();
-//        }
-//            $courses = Course::find()->all();
-//
-//        if (isset($userIdentity->type) && $userIdentity->type == User::getTeacher()) {     // если преподаватель
-//            if ($id == null) {
-//                // находим первый курс преподавателя
-//                $courseId = Course::find()->where(['teacher_id' => $userIdentity->id])->min('id');
-//            } else {
-//                $courseId = $id;
-//            }
-//            $courses = Course::find()->where(['teacher_id' => $userIdentity->id])->all();
-//        
-
+        $dataProviderCourse = new ActiveDataProvider([
+            'query' => $courses,
+        ]);
+        
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
-            'courses' => $courses,
+            //'courses' => $courses,
+            'dataProviderCourse' => $dataProviderCourse,
         ]);
     }
 

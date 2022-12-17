@@ -63,6 +63,8 @@ class Lecture extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Course::class, ['id' => 'course_id']);
     }
+    
+   
 
     /**
      * {@inheritdoc}

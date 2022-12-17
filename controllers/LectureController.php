@@ -11,6 +11,9 @@ use app\models\Course;
 use app\models\User;
 use Yii;
 use yii\filters\AccessControl;
+use app\models\CourseStudent;
+use app\models\LectureSearch;
+use app\models\Lesson;
 
 /**
  * LectureController implements the CRUD actions for Lecture model.
@@ -81,49 +84,18 @@ class LectureController extends Controller {
      * @return string
      */
     public function actionIndex() {
-        $identityUser = User::getIdentityUser();
-        if ($identityUser->type == User::getTeacher()) {
-            $courses = Course::find()->where(['teacher_id' => $identityUser->id])->all(); //все курсы преподавателя
-        }
-        // необходимо доработать
-        if ($identityUser->type == User::getStudent()) {
-            $courses = Course::find()->where(['teacher_id' => $identityUser->id])->all(); //все курсы преподавателя
-        }
-        
-        $courseId = Yii::$app->request->get('id');
-        if ($courseId) {
-            // текущий курс преподавателя
-            $course = Course::find()->where(['id' => $courseId])->one();
-            $courseId = $course->id;
-        } else {
-            // первый курс преподавателя
-            $courseId = Course::find()->where(['teacher_id' => $identityUser->id])->min('id');
-//            $lectures = $course->lectures;
-        }
-//        
-//        echo '<pre>';
-//        var_dump($course);
-//        echo '</pre>';
-//        exit();
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => Lecture::find()->where(['course_id' => $courseId]), // лекции для одного курса
-//            'query' => lectures::find(),
-                /*
-                  'pagination' => [
-                  'pageSize' => 50
-                  ],
-                  'sort' => [
-                  'defaultOrder' => [
-                  'id' => SORT_DESC,
-                  ]
-                  ],
-                 */
+        $searchModel = new LectureSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
+        $teacherIdentity = User::getIdentityUser();
+        $course = Course::find()->where(['teacher_id' => $teacherIdentity->id]);
+        $dataProviderCourse = new ActiveDataProvider([
+            'query' => $course,
         ]);
 
         return $this->render('index', [
-                    'dataProvider' => $dataProvider,
-                    'courses' => $courses,
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+            'dataProviderCourse' => $dataProviderCourse,
         ]);
     }
 
@@ -135,7 +107,7 @@ class LectureController extends Controller {
      */
     public function actionView($id) {
         return $this->render('view', [
-                    'model' => $this->findModel($id),
+            'model' => $this->findModel($id),
         ]);
     }
 
@@ -161,8 +133,8 @@ class LectureController extends Controller {
         }
 
         return $this->render('create', [
-                    'model' => $model,
-                    'courses' => $courseList,
+            'model' => $model,
+            'courses' => $courseList,
         ]);
     }
 

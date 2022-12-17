@@ -45,7 +45,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
             ['label' => 'Преподаватели', 'url' => ['/user/index', 'type' => User::getTeacher()]],
             ['label' => 'Студенты', 'url' => ['/user/index', 'type' => User::getStudent()]],
             ['label' => 'Группы по курсам', 'url' => ['/course-student/index']],
-            ['label' => 'Занятия по лекции', 'url' => ['/lesson/index']],
+            ['label' => 'Занятия по лекциям', 'url' => ['/lesson/index']],
             ['label' => 'Адреса', 'url' => ['/place/index']],
             Yii::$app->user->isGuest
                 ? ['label' => 'Login', 'url' => ['/site/login']]
@@ -69,8 +69,8 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
             ['label' => 'Лекции', 'url' => ['/lecture/index']],
 //            ['label' => 'Студенты', 'url' => ['/user/index', 'type' => User::getStudent()]],
             ['label' => 'Студенты по курсам', 'url' => ['/course-student/index']],
-            
-            ['label' => 'Адреса', 'url' => ['/place/index']],
+            //['label' => 'Занятия по лекциям', 'url' => ['/lesson/index']],
+            //['label' => 'Адреса', 'url' => ['/place/index']],
             Yii::$app->user->isGuest
                 ? ['label' => 'Login', 'url' => ['/site/login']]
                 : '<li class="nav-item">'
@@ -91,8 +91,8 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         'items' => [
             ['label' => 'Курс', 'url' => ['/course/index']],
             ['label' => 'Лекции', 'url' => ['/lecture/index']],
-            ['label' => 'Занятия по лекции', 'url' => ['/lesson/index']],
-            ['label' => 'Адрес', 'url' => ['/place/index']],
+            //['label' => 'Занятия по лекции', 'url' => ['/lesson/index']],
+            //['label' => 'Адрес', 'url' => ['/place/index']],
             Yii::$app->user->isGuest
                 ? ['label' => 'Login', 'url' => ['/site/login']]
                 : '<li class="nav-item">'

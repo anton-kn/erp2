@@ -53,19 +53,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'rate_med',
             [
-            'class' => 'yii\grid\ActionColumn',
-            'template' => '{course}',
-            'visibleButtons' => [
-                'course' => true,
-            ],
-            'buttons' => [
-                'course' => function ($url,$model,$key) {
-//                    $url = Url::to(['/lecture/index']);
-                    return Html::a('Лекции', ['lecture/create'], ['class' => 'btn btn-link']);
-                },
-                ],
-            ],
-            [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Course $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);

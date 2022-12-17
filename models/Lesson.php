@@ -64,6 +64,11 @@ class Lesson extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Place::class, ['id' => 'place_id']);
     }
+    
+    public function getLecture()
+    {
+        return $this->hasOne(Lecture::class, ['id' => 'place_id']);
+    }
 
     /**
      * {@inheritdoc}

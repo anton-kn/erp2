@@ -5,17 +5,18 @@ namespace app\models;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Lesson;
+use app\models\Lecture;
+use app\models\User;
 
 /**
  * LessonSearch represents the model behind the search form of `app\models\Lesson`.
  */
-class LessonSearch extends Lesson
-{
+class LessonSearch extends Lesson {
+
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['id', 'lecture_id', 'place_id'], 'integer'],
             [['date', 'time_start', 'time_end'], 'safe'],
@@ -25,8 +26,7 @@ class LessonSearch extends Lesson
     /**
      * {@inheritdoc}
      */
-    public function scenarios()
-    {
+    public function scenarios() {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -38,11 +38,19 @@ class LessonSearch extends Lesson
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
-    {
-        $query = Lesson::find();
-
-        // add conditions that should always apply here
+    public function search($params) {
+//        echo '<pre>';
+//var_dump($params);
+//echo '</pre>';
+//exit();
+        $userIdentity = User::getIdentityUser();
+        if ($userIdentity->type == User::getAdmin()) {
+            $query = Lesson::find();
+        }
+        if ($userIdentity->type == User::getTeacher() || $userIdentity->type == User::getStudent()) {
+            $course = Lecture::findOne($params['lectureId']);
+            $query = Lesson::find()->where(['lecture_id' => $course->id]);
+        }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -68,4 +76,5 @@ class LessonSearch extends Lesson
 
         return $dataProvider;
     }
+
 }

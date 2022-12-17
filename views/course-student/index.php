@@ -10,6 +10,7 @@ use yii\widgets\DetailView;
 use app\models\User;
 use app\models\Course;
 use Yii;
+use yii\widgets\ListView;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
@@ -20,10 +21,16 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="course-student-index">
     
+    <h2>Список курсов</h2>
+    <?=
+    ListView::widget([
+        'dataProvider' => $dataProviderCourse,
+        'itemView' => '_list-course'
+    ]);
+    ?>
+    
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php foreach ($courses as $course) { ?>
-        <?= Html::a($course->name, ['course-student/index', 'courseId' => $course->id], ['class' => 'btn btn-link'])  ?>
-    <?php } ?>
+   
 
     <?php if(Yii::$app->user->identity->user->is_admin) {  ?>
     <p>

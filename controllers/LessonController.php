@@ -38,7 +38,15 @@ class LessonController extends Controller {
                         'rules' =>
                         [
                             [
-                                'actions' => ['logout'],
+                                'actions' => ['logout', 'index'],
+                                'allow' => true,
+                                'matchCallback' => function ($rule, $action) use ($user) {
+                                    return $user->type == User::getStudent();
+                                },
+                                'roles' => ['@'],
+                            ],
+                            [
+                                'actions' => ['logout', 'index'],
                                 'allow' => true,
                                 'matchCallback' => function ($rule, $action) use ($user) {
                                     return $user->type == User::getTeacher();
@@ -99,7 +107,7 @@ class LessonController extends Controller {
      */
     public function actionView($id) {
         return $this->render('view', [
-                    'model' => $this->findModel($id),
+            'model' => $this->findModel($id),
         ]);
     }
 
@@ -146,13 +154,25 @@ class LessonController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->findModel($id);
+        $lectures = Lecture::find()->where(['course_id' => $id])->all();
+        $lectureList = [];
+        foreach ($lectures as $lecture) {
+            $lectureList[$lecture->id] = $lecture->name;
+        }
 
+        $places = Place::find()->all();
+        $placeList = [];
+        foreach ($places as $places) {
+            $placeList[$places->id] = $places->address;
+        }
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
-                    'model' => $model,
+            'model' => $model,
+            'lecture' => $lectureList,
+            'place' => $placeList,
         ]);
     }
 

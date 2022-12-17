@@ -5,12 +5,13 @@ use yii\db\Migration;
 /**
  * Handles the creation of table `{{%visit}}`.
  */
-class m221213_191047_create_visit_table extends Migration {
-
+class m221217_205352_create_visit_table extends Migration
+{
     /**
      * {@inheritdoc}
      */
-    public function safeUp() {
+    public function safeUp()
+    {
         $this->createTable('{{%visit}}', [
             'id' => $this->primaryKey(),
             'student_id' => $this->integer()->notNull()->comment('Студент'),
@@ -28,8 +29,8 @@ class m221213_191047_create_visit_table extends Migration {
     /**
      * {@inheritdoc}
      */
-    public function safeDown() {
+    public function safeDown()
+    {
         $this->dropTable('{{%visit}}');
     }
-
 }

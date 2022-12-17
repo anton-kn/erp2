@@ -5,7 +5,7 @@ use yii\db\Migration;
 /**
  * Handles the creation of table `{{%lesson}}`.
  */
-class m221213_184836_create_lesson_table extends Migration
+class m221217_204501_create_lesson_table extends Migration
 {
     /**
      * {@inheritdoc}
@@ -23,6 +23,9 @@ class m221213_184836_create_lesson_table extends Migration
         
         $this->addForeignKey('fk_lesson_to_place', 'lesson', 'place_id', 'place', 'id');
         $this->createIndex('idx_lesson_to_place_id', 'lesson', 'place_id');
+        
+        $this->addForeignKey('fk_lesson_to_lecture', 'lesson', 'lecture_id', 'lecture', 'id');
+        $this->createIndex('idx_lesson_to_lecture_id', 'lesson', 'lecture_id');
     }
 
     /**
