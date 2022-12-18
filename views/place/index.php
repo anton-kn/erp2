@@ -10,7 +10,7 @@ use app\models\User;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Places';
+$this->title = 'Адресы';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="place-index">
@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <?php if(Yii::$app->user->identity->user->type == User::getAdmin()) { ?>
     <p>
-        <?= Html::a('Create Place', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Добавить адрес', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?php } ?>
 
@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            //'id',
             'address',
             'cabinet',
             [

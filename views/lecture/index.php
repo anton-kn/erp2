@@ -9,7 +9,7 @@ use yii\widgets\Pjax;
 use app\models\Course;
 use yii\widgets\ListView;
 use app\models\User;
-use Yii;
+//use Yii;
 use app\models\Lesson;
 
 /** @var yii\web\View $this */
