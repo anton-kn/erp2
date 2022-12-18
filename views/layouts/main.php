@@ -10,8 +10,10 @@ use yii\bootstrap5\Html;
 use yii\bootstrap5\Nav;
 use yii\bootstrap5\NavBar;
 use app\models\User;
+use kartik\icons\Icon;
 
 AppAsset::register($this);
+Icon::map($this); 
 
 $this->registerCsrfMetaTags();
 $this->registerMetaTag(['charset' => Yii::$app->charset], 'charset');
@@ -42,8 +44,8 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         'options' => ['class' => 'navbar-nav'],
         'items' => [
             ['label' => 'Курсы', 'url' => ['/course/index']],
-            ['label' => 'Преподаватели', 'url' => ['/user/index', 'type' => User::getTeacher()]],
-            ['label' => 'Студенты', 'url' => ['/user/index', 'type' => User::getStudent()]],
+            ['label' => 'Преподаватели', 'url' => ['/user/index', 'UserSearch[type]' => User::getTeacher()]],
+            ['label' => 'Студенты', 'url' => ['/user/index', 'UserSearch[type]' => User::getStudent()]],
             ['label' => 'Группы по курсам', 'url' => ['/course-student/index']],
             ['label' => 'Занятия по лекциям', 'url' => ['/lesson/index']],
             ['label' => 'Адреса', 'url' => ['/place/index']],

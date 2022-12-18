@@ -70,7 +70,7 @@ class UserController extends Controller {
      *
      * @return string
      */
-    public function actionIndex($type) {
+    public function actionIndex() {
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 //        echo '<pre>';

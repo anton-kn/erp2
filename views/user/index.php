@@ -6,17 +6,18 @@ use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
-use Yii;
+//use Yii;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$type = Yii::$app->request->get('type');
+$type = $searchModel->type;
+$types = User::getUsers();
 if(Yii::$app->user->identity->user->type == User::getTeacher()){
     $this->title = 'Студенты';
     $this->params['breadcrumbs'][] = $this->title;
 }
 if(Yii::$app->user->identity->user->is_admin){
-    $this->title = 'Новый '. User::getUsers()[$type];
+    $this->title = 'Новый '. $types[$type];
     $this->params['breadcrumbs'][] = $this->title;
 }
 
@@ -50,9 +51,10 @@ if(Yii::$app->user->identity->user->is_admin){
             'type' =>
             [
                 'attribute' => 'type',
-                'value' => function($data){
-                    if(isset($data->type)) {return User::getUsers()[$data->type];}
+                'value' => function($data) use($types){
+                    if(isset($data->type)) {return $types[$data->type];}
                 },
+                'filter' => $types,
             ],
             [
                 'class' => ActionColumn::className(),
