@@ -86,6 +86,7 @@ class LectureController extends Controller {
     public function actionIndex() {
         $searchModel = new LectureSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
+        
         $teacherIdentity = User::getIdentityUser();
         $course = Course::find()->where(['teacher_id' => $teacherIdentity->id]);
         $dataProviderCourse = new ActiveDataProvider([
@@ -116,13 +117,8 @@ class LectureController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate() {
-        $teacher = User::getIdentityUser();
-        $courses = Course::find()->where(['teacher_id' => $teacher->id])->all();
-        $courseList = [];
-        foreach ($courses as $course) {
-            $courseList[$course->id] = $course->name;
-        }
+    public function actionCreate($courseId) 
+    {
         $model = new Lecture();
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -131,10 +127,18 @@ class LectureController extends Controller {
         } else {
             $model->loadDefaultValues();
         }
+        
+        //$teacher = User::getIdentityUser();
+//        $course = Course::find()->where(['teacher_id' => $teacher->id])->all();
+        $course = Course::findOne($courseId);
+//        $courseList = [];
+//        foreach ($courses as $course) {
+//            $courseList[$course->id] = $course->name;
+//        }
 
         return $this->render('create', [
             'model' => $model,
-            'courses' => $courseList,
+            'course' => $course,
         ]);
     }
 

@@ -45,18 +45,18 @@ class LectureSearch extends Lecture {
             $query = Lecture::find()->where(['course_id' => $params['courseId']]);
         } else {
             $userIdentity = User::getIdentityUser();
-            if ($userIdentity->type == User::getTeacher()) {  // лекции для преподавателей
-                $firstCourse = Course::find()->where(['teacher_id' => $userIdentity->id])->min('id');
-                $query = Lecture::find()->where(['course_id' => $firstCourse]);
+            if ($userIdentity->type == User::getTeacher()) { 
+                $courses = Course::find()->where(['teacher_id' => $userIdentity->id])->all();
+                $courseId = [];
+                foreach ($courses as $course){
+                    $courseId[] = $course->id;
+                }
+                $query = Lecture::find()->where(['course_id' => $courseId]);
             }
             
-            if ($userIdentity->type == User::getStudent()) {  // лекции для преподавателей
-                $onlyCourse = CourseStudent::find()->where(['student_id' => $userIdentity->id])->one();
-//                echo '<pre>';
-//                var_dump($onlyCourse->student_id);
-//                echo '</pre>';
-//                exit();
-                $query = Lecture::find()->where(['course_id' => $onlyCourse->course_id]);
+            if ($userIdentity->type == User::getStudent()) {  
+                $сourse = CourseStudent::find()->where(['student_id' => $userIdentity->id])->one();
+                $query = Lecture::find()->where(['course_id' => $сourse->course_id]);
             }
         }
 

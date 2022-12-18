@@ -5,5 +5,6 @@ use yii\bootstrap5\Html
 ?>
 
 <div class="course mb-2">
-    <?= Html::a($model->name, ['course-student/index', 'courseId' => $model->id], ['class' => 'btn btn-link'])?>
+    <?= Html::a('+' , ['create', 'courseId' => $model->id], ['class' => ['btn btn-success']]) ?>
+    <?= 'Курс: ' . $model->name ?>
 </div>

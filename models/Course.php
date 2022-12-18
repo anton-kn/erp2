@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use app\models\CourseStudent;
 
 /**
  * This is the model class for table "course".
@@ -108,6 +109,8 @@ class Course extends \yii\db\ActiveRecord
         return new CourseQuery(get_called_class());
     }
     
+    
+    
     public static function getStatus(){
         return 
         [
@@ -118,12 +121,31 @@ class Course extends \yii\db\ActiveRecord
         ];
     }
     
-    public static function getCourses(){
-        $courses = self::find()->all();
-        $data = [];
-        foreach ($courses as $course){
-            $data[$course->id] = $course->name;
+    /**
+     * Формируте массив курсов
+     * @return type
+     */
+    public static function listCourses(){
+        $userIdentity = User::getIdentityUser();
+        if($userIdentity->type == User::getAdmin()){
+            $courses = self::find()->all();
         }
-        return $data;
+        
+        if($userIdentity->type == User::getTeacher()){
+            $courses = self::find()->where(['teacher_id' => $userIdentity->id])->all();
+        }
+        
+        if($userIdentity->type == User::getStudent()){
+             // студент может быть записан только на один курс
+            $courseStudent = CourseStudent::find()->where(['student_id' => $userIdentity->id])->one();
+            $course = self::find()->where(['id' => $courseStudent->course_id])->one();
+            return [$course->id => $course->name];
+        }
+        
+        $listCourses = [];
+        foreach ($courses as $course){
+            $listCourses[$course->id] = $course->name;
+        }
+        return $listCourses;
     }
 }

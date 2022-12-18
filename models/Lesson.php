@@ -54,6 +54,8 @@ class Lesson extends \yii\db\ActiveRecord
             'place_id' => 'Место проведения',
         ];
     }
+    
+    
 
     /**
      * Gets query for [[Place]].

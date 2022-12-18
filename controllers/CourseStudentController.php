@@ -77,15 +77,16 @@ class CourseStudentController extends Controller {
         $searchModel = new CourseStudentSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
         
-        $userIdentity = User::getIdentityUser();
-        if (isset($userIdentity->type) && $userIdentity->type == User::getAdmin()) {   // если администратор
-            $courses = Course::find();
-        }
+//        $userIdentity = User::getIdentityUser();
+//        if (isset($userIdentity->type) && $userIdentity->type == User::getAdmin()) {   // если администратор
+//            $courses = Course::find();
+//        }
+//        
+//        if (isset($userIdentity->type) && $userIdentity->type == User::getTeacher()) {   // если администратор
+//            $courses = Course::find()->where(['teacher_id' => $userIdentity->id]);
+//        }
         
-        if (isset($userIdentity->type) && $userIdentity->type == User::getTeacher()) {   // если администратор
-            $courses = Course::find()->where(['teacher_id' => $userIdentity->id]);
-        }
-        
+        $courses = Course::find();
         $dataProviderCourse = new ActiveDataProvider([
             'query' => $courses,
         ]);
@@ -115,7 +116,7 @@ class CourseStudentController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate() {
+    public function actionCreate($courseId) {
         $model = new CourseStudent();
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -124,11 +125,16 @@ class CourseStudentController extends Controller {
         } else {
             $model->loadDefaultValues();
         }
+        $course = Course::findOne($courseId);
+//        echo '<pre>';
+//var_dump($course->name);
+//echo '</pre>';
+//exit();
 
         return $this->render('create', [
-                    'model' => $model,
-                    'user' => User::getFullName(true),
-                    'course' => Course::getCourses(),
+            'model' => $model,
+            'user' => User::listStudents(),
+            'course' => $course,
         ]);
     }
 

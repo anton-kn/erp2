@@ -16,6 +16,9 @@ use app\models\Lesson;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 $this->title = 'Лекции по курсам';
 $this->params['breadcrumbs'][] = $this->title;
+
+$courses = Course::listCourses();
+$course = Course::find();
 ?>
 <div class="lecture-index">
 
@@ -27,12 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'itemView' => '_list-course'
         ])
         ?>
-
-        <p>
-            <?= Html::a('Новая лекция', ['create'], ['class' => 'btn btn-success']) ?>
         <?php } ?>
-    </p>
-
     <?php Pjax::begin(); ?>
 
     <?=
@@ -46,25 +44,27 @@ $this->params['breadcrumbs'][] = $this->title;
             'course_id' =>
             [
                 'attribute' => 'course_id',
-                'value' => function ($data) {
-                    $course = Course::find()->where(['id' => $data->course_id])->one();
-                    return $course->name;
-                }
+                'value' => function ($data) use($course) {
+                    $name = $course->where(['id' => $data->course_id])->one();
+                    return $name->name;
+                },
+                'filter' => $courses,
+                'filterInputOptions' => ['prompt' => 'Все', 'class' => 'form-control', 'id' => null],
             ],
             'rate',
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'template' => '{course}',
-                'visibleButtons' => [
-                    'course' => true,
-                ],
-                'buttons' => [
-                    'course' => function ($url, $model, $key) {
-                        return Html::a('Занятия', ['/lesson/index', 'lectureId'=>$model->id], ['class' => 'btn btn-link', 'data-pjax' => 0,]);
-                    },
-                ],
-                
-            ],
+//            [
+//                'class' => 'yii\grid\ActionColumn',
+//                'template' => '{course}',
+//                'visibleButtons' => [
+//                    'course' => true,
+//                ],
+//                'buttons' => [
+//                    'course' => function ($url, $model, $key) {
+//                        return Html::a('Занятия', ['/lesson/index', 'lectureId'=>$model->id], ['class' => 'btn btn-link', 'data-pjax' => 0,]);
+//                    },
+//                ],
+//                
+//            ],
             
             [
                 'class' => ActionColumn::className(),

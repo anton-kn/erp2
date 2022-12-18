@@ -6,32 +6,29 @@ use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use yii\widgets\ListView;
 //use Yii;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$type = $searchModel->type;
-$types = User::getUsers();
-if(Yii::$app->user->identity->user->type == User::getTeacher()){
-    $this->title = 'Студенты';
-    $this->params['breadcrumbs'][] = $this->title;
-}
-if(Yii::$app->user->identity->user->is_admin){
-    $this->title = 'Новый '. $types[$type];
-    $this->params['breadcrumbs'][] = $this->title;
-}
+//$type = $searchModel->type;
+$types = User::typeUsers();
+
+$this->title = 'Пользователи';
+$this->params['breadcrumbs'][] = $this->title;
 
 
 ?>
 <div class="user-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
+    
+    
     <p>
-        <?php if(Yii::$app->user->identity->user->is_admin) { ?>
-        <?= Html::a("Новый " . User::getUsers()[$type], ['create', 'type' => $type], [ 'class' => 'btn btn-success']) ?>
+        <?php if(Yii::$app->user->identity->user->type == User::getAdmin()) { ?>
+        <?= Html::a("Новый преподаватель", ['create', 'type' => User::getTeacher()], [ 'class' => 'btn btn-success']) ?>
+        <?= Html::a("Новый студент", ['create', 'type' => User::getStudent()], [ 'class' => 'btn btn-success']) ?>
         <?php }?>
     </p>
+
     
     <?php Pjax::begin(); ?>
 
@@ -55,11 +52,12 @@ if(Yii::$app->user->identity->user->is_admin){
                     if(isset($data->type)) {return $types[$data->type];}
                 },
                 'filter' => $types,
+                'filterInputOptions' => ['prompt' => 'Все', 'class' => 'form-control', 'id' => null],
             ],
             [
                 'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, User $model, $key, $index, $column) use ($type) {
-                    return Url::toRoute([$action, 'id' => $model->id, 'type' => $type]);
+                'urlCreator' => function ($action, User $model, $key, $index, $column) {
+                    return Url::toRoute([$action, 'id' => $model->id]);
                  }
             ],
         ],

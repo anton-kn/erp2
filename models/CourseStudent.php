@@ -73,6 +73,11 @@ class CourseStudent extends \yii\db\ActiveRecord
         return $this->hasOne(User::class, ['id' => 'student_id']);
     }
     
+    public function getLectures()
+    {
+        return $this->hasMany(Lecture::class, ['course_id' => 'course_id']);
+    }
+    
     public function getCourseStudent()
     {
         return $this->hasOne(Course::class, ['id' => 'course_id']);

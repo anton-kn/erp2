@@ -7,8 +7,8 @@ use yii\widgets\ActiveForm;
 /** @var yii\web\View $this */
 /** @var app\models\User $model */
 
-$this->title = User::getUsers()[$model->type]  . ' ' . $model->firstname;
-$this->params['breadcrumbs'][] = ['label' => User::getUsers(true)[$model->type] , 'url' => ['index', 'type' => $model->type]];
+$this->title = User::typeUsers()[$model->type]  . ' ' . $model->firstname;
+$this->params['breadcrumbs'][] = ['label' => 'Пользователи' , 'url' => ['index', 'type' => $model->type]];
 $this->params['breadcrumbs'][] = ['label' => $model->firstname, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Обновить';
 ?>

@@ -32,6 +32,20 @@ class Place extends \yii\db\ActiveRecord
             [['cabinet'], 'string', 'max' => 7],
         ];
     }
+    
+    /**
+     * Массив списка занятий
+     */
+    
+    public static function listPlace()
+    {
+        $places = self::find()->all();
+        $listPlace = [];
+        foreach ($places as $place){
+            $listPlace[$place->id] = $place->address . 'Кабинет ' . $place->cabinet;
+        }
+        return $listPlace;
+    }
 
     /**
      * {@inheritdoc}

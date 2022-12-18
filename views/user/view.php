@@ -8,7 +8,7 @@ use app\models\User;
 /** @var app\models\User $model */
 
 $this->title = $model->firstname;
-$this->params['breadcrumbs'][] = ['label' => User::getUsers(true)[$model->type], 'url' => ['index', 'type' => $model->type]];
+$this->params['breadcrumbs'][] = ['label' => 'Пользователи', 'url' => ['index', 'type' => $model->type]];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
@@ -42,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'type',
                 'value' => function($data){
-                    if(isset($data->type)) {return User::getUsers()[$data->type];}
+                    if(isset($data->type)) {return User::typeUsers()[$data->type];}
                 },
             ],
             //'is_admin:boolean',

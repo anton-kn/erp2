@@ -5,7 +5,7 @@ $db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'basic',
-    'name' => 'Занятия',
+    'name' => 'erp Цифра',
     'language' => 'russian',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],

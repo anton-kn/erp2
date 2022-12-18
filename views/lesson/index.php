@@ -16,6 +16,10 @@ use app\models\User;
 
 $this->title = 'Все занятия';
 $this->params['breadcrumbs'][] = $this->title;
+
+
+$place = Place::find();
+$places = Place::listPlace();
 ?>
 <div class="lesson-index">
     
@@ -39,8 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-//            'id',
+            'id',
             'lecture_id' => 
             [
                 'attribute' => 'lecture_id',
@@ -55,10 +58,25 @@ $this->params['breadcrumbs'][] = $this->title;
             'place_id' => 
             [
                 'attribute' => 'place_id',
-                'value' => function($data){
-                    $place = Place::findOne($data->place_id);
+                'value' => function($data) use ($place){
+                    $place = $place->where(['id' => $data->place_id])->one();
                     return $place->address . ' ' . $place->cabinet;
-                }
+                },
+                'filter' => $places,
+                'filterInputOptions' => ['prompt' => 'Все', 'class' => 'form-control', 'id' => null],
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{course}',
+                'visibleButtons' => [
+                    'course' => true,
+                ],
+                'buttons' => [
+                    'course' => function ($url, $model, $key) {
+                        return Html::a('Отметить', ['/visit/create', 'lessonId'=>$model->id], ['class' => 'btn btn-link', 'data-pjax' => 0,]);
+                    },
+                ],
+                
             ],
             [
                 'class' => ActionColumn::className(),

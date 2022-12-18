@@ -41,7 +41,7 @@ class UserController extends Controller {
                                 'roles' => ['@'],
                             ],
                             [
-                                'actions' => ['logout'],
+                                'actions' => ['logout', 'index'],
                                 'allow' => true,
                                 'matchCallback' => function ($rule, $action) use ($user) {
                                     return $user->type == User::getTeacher();
@@ -73,28 +73,14 @@ class UserController extends Controller {
     public function actionIndex() {
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
-//        echo '<pre>';
-//        var_dump($this->request->queryParams['type']);
-//        echo '</pre>';
-//        exit();
-        
-//        $dataProvider = new ActiveDataProvider([
-//            'query' => User::find()->where(['type' => $type]),
-//                /*
-//                  'pagination' => [
-//                  'pageSize' => 50
-//                  ],
-//                  'sort' => [
-//                  'defaultOrder' => [
-//                  'id' => SORT_DESC,
-//                  ]
-//                  ],
-//                 */
+//        $dataProviderUser = new ActiveDataProvider([
+//            'query' => User::find()->where(['type' => User::getAdmin()]),
 //        ]);
-
+        
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
+//            'dataProviderUser' => $dataProviderUser,
         ]);
     }
 
@@ -106,7 +92,7 @@ class UserController extends Controller {
      */
     public function actionView($id) {
         return $this->render('view', [
-                    'model' => $this->findModel($id),
+            'model' => $this->findModel($id),
         ]);
     }
 
@@ -129,7 +115,8 @@ class UserController extends Controller {
         }
 
         return $this->render('create', [
-                    'model' => $model,
+            'model' => $model,
+            'type' => Yii::$app->request->get('type'), // передаем в create тип пользователя
         ]);
     }
 

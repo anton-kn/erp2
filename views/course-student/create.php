@@ -6,8 +6,8 @@ use yii\bootstrap5\ActiveForm;
 /** @var yii\web\View $this */
 /** @var app\models\CourseStudent $model */
 
-$this->title = 'Создать новый курс';
-$this->params['breadcrumbs'][] = ['label' => 'Курсы', 'url' => ['index']];
+$this->title = 'Курс ' . $course->name;
+$this->params['breadcrumbs'][] = ['label' => 'Группы по курсам', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="course-student-create">
@@ -18,9 +18,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
         <?php $form = ActiveForm::begin(); ?>
 
-        <?= $form->field($model, 'course_id')->dropDownList($course)->label('Курсы') ?>
+        <?= $form->field($model, 'course_id')->textInput()->hiddenInput(['value' => $course->id, 'name' => $model->course_id])->label(false) ?>
 
-        <?= $form->field($model, 'student_id')->dropDownList($user)->label('Студенты') ?>
+        <?= $form->field($model, 'student_id')->dropDownList($user)->label('Студент(ы)') ?>
 
         <div class="form-group">
             <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

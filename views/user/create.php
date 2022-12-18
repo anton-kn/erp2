@@ -7,10 +7,9 @@ use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var app\models\User $model */
-$type = Yii::$app->request->get('type');
-$this->title = 'Новый ' . User::getUsers()[$type];
 
-$this->params['breadcrumbs'][] = ['label' => User::getUsers()[$type], 'url' => ['index', 'type' => $type]];
+$this->title = 'Новый ' . User::typeUsers()[$type];
+$this->params['breadcrumbs'][] = ['label' => 'Пользователи', 'url' => ['index', 'type' => $type]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-create">

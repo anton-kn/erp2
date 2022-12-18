@@ -64,6 +64,11 @@ class Lecture extends \yii\db\ActiveRecord
         return $this->hasOne(Course::class, ['id' => 'course_id']);
     }
     
+    public function getLesson()
+    {
+        return $this->hasOne(Lesson::class, ['lecture_id' => 'id']);
+    }
+    
    
 
     /**

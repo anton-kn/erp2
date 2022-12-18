@@ -21,6 +21,7 @@ $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, 
 $this->registerMetaTag(['name' => 'description', 'content' => $this->params['meta_description'] ?? '']);
 $this->registerMetaTag(['name' => 'keywords', 'content' => $this->params['meta_keywords'] ?? '']);
 $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii::getAlias('@web/favicon.ico')]);
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -44,8 +45,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         'options' => ['class' => 'navbar-nav'],
         'items' => [
             ['label' => 'Курсы', 'url' => ['/course/index']],
-            ['label' => 'Преподаватели', 'url' => ['/user/index', 'UserSearch[type]' => User::getTeacher()]],
-            ['label' => 'Студенты', 'url' => ['/user/index', 'UserSearch[type]' => User::getStudent()]],
+            ['label' => 'Пользователи', 'url' => ['/user/index']],
             ['label' => 'Группы по курсам', 'url' => ['/course-student/index']],
             ['label' => 'Занятия по лекциям', 'url' => ['/lesson/index']],
             ['label' => 'Адреса', 'url' => ['/place/index']],
@@ -69,9 +69,9 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         'items' => [
             ['label' => 'Курсы', 'url' => ['/course/index']],
             ['label' => 'Лекции', 'url' => ['/lecture/index']],
-//            ['label' => 'Студенты', 'url' => ['/user/index', 'type' => User::getStudent()]],
-            ['label' => 'Студенты по курсам', 'url' => ['/course-student/index']],
-            //['label' => 'Занятия по лекциям', 'url' => ['/lesson/index']],
+//            ['label' => 'Студенты', 'url' => ['/user/index']],
+            ['label' => 'Группы по курсам', 'url' => ['/course-student/index']],
+            ['label' => 'Занятия по лекциям', 'url' => ['/lesson/index']],
             //['label' => 'Адреса', 'url' => ['/place/index']],
             Yii::$app->user->isGuest
                 ? ['label' => 'Login', 'url' => ['/site/login']]
@@ -93,8 +93,8 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         'items' => [
             ['label' => 'Курс', 'url' => ['/course/index']],
             ['label' => 'Лекции', 'url' => ['/lecture/index']],
-            //['label' => 'Занятия по лекции', 'url' => ['/lesson/index']],
-            //['label' => 'Адрес', 'url' => ['/place/index']],
+            ['label' => 'Занятия по лекциям', 'url' => ['/lesson/index']],
+            ['label' => 'Отметка', 'url' => ['/visit/index']],
             Yii::$app->user->isGuest
                 ? ['label' => 'Login', 'url' => ['/site/login']]
                 : '<li class="nav-item">'

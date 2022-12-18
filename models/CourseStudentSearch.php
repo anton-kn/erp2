@@ -40,32 +40,17 @@ class CourseStudentSearch extends CourseStudent {
     public function search($params) {
         $userIdentity = User::getIdentityUser();
         if (isset($userIdentity->type) && $userIdentity->type == User::getAdmin()) {   // если администратор
-            if (isset($params['courseId'])) {
-                $query = CourseStudent::find()->where(['course_id' => $params['courseId']]);
-            } else {
-                $firstCourse = Course::find()->min('id');
-                $query = CourseStudent::find()->where(['course_id' => $firstCourse]);
-            }
+            $query = CourseStudent::find();
         }
 
         if (isset($userIdentity->type) && $userIdentity->type == User::getTeacher()) {   // если администратор
-           
-            if (isset($params['courseId'])) {
-                $course = Course::findOne($params['courseId']);
-                 // проверка принадлежности courseId курса к текущему преподавателю
-                if (isset($course->teacher_id) && $course->teacher_id == $userIdentity->id) {
-                    $query = CourseStudent::find()->where(['course_id' => $params['courseId']]);
-                } else {
-                    $firstCourse = Course::find()->where(['teacher_id' => $userIdentity->id])->min('id');
-                    $query = CourseStudent::find()->where(['course_id' => $firstCourse]);
-                }
-                
-            } else {
-                $firstCourse = Course::find()->where(['teacher_id' => $userIdentity->id])->min('id');
-                $query = CourseStudent::find()->where(['course_id' => $firstCourse]);
+            $courses = Course::find()->where(['teacher_id' => $userIdentity->id])->all();
+            $courseId = [];
+            foreach ($courses as $course){
+                $courseId[] = $course->id;
             }
+            $query = CourseStudent::find()->where(['course_id'=>$courseId]);
         }
-
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

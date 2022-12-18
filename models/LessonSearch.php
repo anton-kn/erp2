@@ -39,18 +39,31 @@ class LessonSearch extends Lesson {
      * @return ActiveDataProvider
      */
     public function search($params) {
-//        echo '<pre>';
-//var_dump($params);
-//echo '</pre>';
-//exit();
+//        $query = Lesson::find();
         $userIdentity = User::getIdentityUser();
         if ($userIdentity->type == User::getAdmin()) {
             $query = Lesson::find();
         }
-        if ($userIdentity->type == User::getTeacher() || $userIdentity->type == User::getStudent()) {
-            $course = Lecture::findOne($params['lectureId']);
-            $query = Lesson::find()->where(['lecture_id' => $course->id]);
+        if ($userIdentity->type == User::getTeacher()) {
+            $courses = Course::find()->where(['teacher_id' => $userIdentity->id])->all();
+            $listLesson = [];
+            foreach ($courses as $course){
+                foreach ($course->lectures as $lecture){
+                    $listLesson[$lecture->id] = $lecture->lesson;
+                }
+            }
+            $query = Lesson::find()->where(['id' => $listLesson]);
         }
+        
+        if ($userIdentity->type == User::getStudent()) {
+            $course = CourseStudent::find()->where(['student_id' => $userIdentity->id])->one();
+            $listLesson = [];
+            foreach ($course->lectures as $lecture){
+                $listLesson[$lecture->id] = $lecture->lesson;
+            }
+            $query = Lesson::find()->where(['id' => $listLesson]);
+        }
+        
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
