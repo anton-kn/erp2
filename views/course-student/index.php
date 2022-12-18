@@ -9,7 +9,7 @@ use yii\widgets\Pjax;
 use yii\widgets\DetailView;
 use app\models\User;
 use app\models\Course;
-use Yii;
+//use Yii;
 use yii\widgets\ListView;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */

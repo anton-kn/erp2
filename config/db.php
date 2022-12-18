@@ -4,7 +4,7 @@ return [
     'class' => 'yii\db\Connection',
     'dsn' => 'pgsql:host=localhost;dbname=erp2',
     'username' => 'postgres',
-    'password' => 'postgres',
+    'password' => 'qwer1234',
     'charset' => 'utf8',
 
     // Schema cache options (for production environment)
