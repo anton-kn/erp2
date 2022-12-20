@@ -15,21 +15,19 @@ use Yii;
  * @property Lesson $lesson
  * @property User $student
  */
-class Visit extends \yii\db\ActiveRecord
-{
+class Visit extends \yii\db\ActiveRecord {
+
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'visit';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['student_id', 'lesson_id'], 'required'],
             [['student_id', 'lesson_id', 'rate'], 'default', 'value' => null],
@@ -42,9 +40,9 @@ class Visit extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
+            
             'id' => 'ID',
             'student_id' => 'Студент',
             'lesson_id' => 'Занятие',
@@ -57,8 +55,7 @@ class Visit extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery|LessonQuery
      */
-    public function getLesson()
-    {
+    public function getLesson() {
         return $this->hasOne(Lesson::class, ['id' => 'lesson_id']);
     }
 
@@ -67,8 +64,7 @@ class Visit extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery|UserQuery
      */
-    public function getStudent()
-    {
+    public function getStudent() {
         return $this->hasOne(User::class, ['id' => 'student_id']);
     }
 
@@ -76,16 +72,15 @@ class Visit extends \yii\db\ActiveRecord
      * {@inheritdoc}
      * @return VisitQuery the active query used by this AR class.
      */
-    public static function find()
-    {
+    public static function find() {
         return new VisitQuery(get_called_class());
     }
-    
+
     /**
      * Оценки за занятии
      */
-    
-    public static function rateLesson(){
+    public static function rateLesson() {
         return ['1' => 1, '2' => 2, '3' => 3, '4' => 4, '5' => 5];
     }
+
 }

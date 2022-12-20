@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use app\models\Course;
 
 /**
  * This is the model class for table "lecture".
@@ -17,6 +18,7 @@ use Yii;
  */
 class Lecture extends \yii\db\ActiveRecord
 {
+    private $countNum;
     /**
      * {@inheritdoc}
      */
@@ -68,6 +70,7 @@ class Lecture extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Lesson::class, ['lecture_id' => 'id']);
     }
+  
     
    
 
@@ -81,14 +84,33 @@ class Lecture extends \yii\db\ActiveRecord
     }
     
     /**
-     * Функция присваивает порядковый номер лекции
+     * Функция присваивает порядковый номер лекции курса
      * $count = 0 return $num = 1
      * $count = n (т.е. $count > 0) return $num = n+1 
-     * @param type $count
      */
     
-    public function valueNum($count)
-    {
+    public static function autoNum($courseId){
+        // находим курс
+        $course = Course::findAll($courseId);
+        // определить количество лекций в lecture для определенного курса
+        $this->countNum = self::find()->where(['course_id' => $course->id])->count();
+        if(!$this->countNum){
+            return '1';
+        }
         
+        $lecture = self::find()->where(['course_id' => $course->id])->max('num');
+        return $lecture + 1;
+        
+    }
+    
+    public function beforeSave($insert) {
+        if (!parent::beforeSave($insert)) {
+            return false;
+        }
+        
+        for($i = 1; $i <= $this->countNum; $i++){
+            $this->num = $i;
+        }
+        return true;
     }
 }

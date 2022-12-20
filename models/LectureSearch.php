@@ -56,7 +56,12 @@ class LectureSearch extends Lecture {
             
             if ($userIdentity->type == User::getStudent()) {  
                 $сourse = CourseStudent::find()->where(['student_id' => $userIdentity->id])->one();
-                $query = Lecture::find()->where(['course_id' => $сourse->course_id]);
+                if($сourse){
+                    $query = Lecture::find()->where(['course_id' => $сourse->course_id]);
+                }else{
+                    $query = Lecture::find();
+                }
+                
             }
         }
 

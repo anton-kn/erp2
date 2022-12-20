@@ -47,23 +47,27 @@ class LessonSearch extends Lesson {
         if ($userIdentity->type == User::getTeacher()) {
             $courses = Course::find()->where(['teacher_id' => $userIdentity->id])->all();
             $listLesson = [];
-            foreach ($courses as $course){
-                foreach ($course->lectures as $lecture){
+            foreach ($courses as $course) {
+                foreach ($course->lectures as $lecture) {
                     $listLesson[$lecture->id] = $lecture->lesson;
                 }
             }
             $query = Lesson::find()->where(['id' => $listLesson]);
         }
-        
+
         if ($userIdentity->type == User::getStudent()) {
             $course = CourseStudent::find()->where(['student_id' => $userIdentity->id])->one();
-            $listLesson = [];
-            foreach ($course->lectures as $lecture){
-                $listLesson[$lecture->id] = $lecture->lesson;
+            if ($course) {
+                $listLesson = [];
+                foreach ($course->lectures as $lecture) {
+                    $listLesson[$lecture->id] = $lecture->lesson;
+                }
+                $query = Lesson::find()->where(['id' => $listLesson]);
+            }else{
+                return true;
             }
-            $query = Lesson::find()->where(['id' => $listLesson]);
         }
-        
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -76,6 +80,7 @@ class LessonSearch extends Lesson {
             // $query->where('0=1');
             return $dataProvider;
         }
+
 
         // grid filtering conditions
         $query->andFilterWhere([

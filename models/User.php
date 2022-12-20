@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use app\models\CourseStudent;
+use app\models\Lesson;
 
 /**
  * This is the model class for table "user".
@@ -143,6 +144,22 @@ class User extends \yii\db\ActiveRecord {
             }
         }
         return $teachers;
+    }
+    
+    /**
+     * Список студентов через список занятия
+     */
+    public static function studentsByLesson($lessonId)
+    {
+        $lesson = Lesson::findOne($lessonId);
+        $courseId = $lesson->lecture->course_id; // находим id курса в лекции
+        $courseStudents = CourseStudent::find()->where(['course_id' => $courseId])->all();
+        $studentId = [];
+        foreach ($courseStudents as $student){
+            $studentId[] = $student->student_id;
+        }
+        
+        return self::find()->where(['id' => $studentId])->all(); // студенты занятия
     }
     
     /**

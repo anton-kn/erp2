@@ -69,7 +69,11 @@ class Lesson extends \yii\db\ActiveRecord
     
     public function getLecture()
     {
-        return $this->hasOne(Lecture::class, ['id' => 'place_id']);
+        return $this->hasOne(Lecture::class, ['id' => 'lecture_id']);
+    }
+    
+    public function getVisit(){
+        return $this->hasOne(Visit::class, ['lesson_id' => 'id']);
     }
 
     /**

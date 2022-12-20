@@ -7,7 +7,7 @@ use app\models\User;
 /** @var yii\web\View $this */
 /** @var app\models\User $model */
 
-$this->title = $model->firstname;
+$this->title = $model->surname . ' ' . $model->firstname . ' ' . $model->patronymic;
 $this->params['breadcrumbs'][] = ['label' => 'Пользователи', 'url' => ['index', 'type' => $model->type]];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);

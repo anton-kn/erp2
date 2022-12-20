@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use app\models\Course;
+use kartik\date\DatePicker;
 
 /** @var yii\web\View $this */
 /** @var app\models\Course $model */
@@ -20,9 +21,27 @@ $this->params['breadcrumbs'][] = $this->title;
 
         <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-        <?= $form->field($model, 'date_start')->textInput() ?>
+        <?= $form->field($model, 'date_start')->widget(DatePicker::class, [
+            'name' => 'dp_2',
+            'type' => DatePicker::TYPE_COMPONENT_PREPEND,
+            'value' => '23-Feb-1982',
+            'pluginOptions' => [
+                'autoclose' => true,
+                'format' => 'dd-m-yyyy',
+            ]
+        ])
+        ?>
 
-        <?= $form->field($model, 'date_end')->textInput() ?>
+        <?= $form->field($model, 'date_end')->widget(DatePicker::class, [
+            'name' => 'dp_2',
+            'type' => DatePicker::TYPE_COMPONENT_PREPEND,
+            'value' => '23-Feb-1982',
+            'pluginOptions' => [
+                'autoclose' => true,
+                'format' => 'dd-m-yyyy'
+            ]
+        ])
+                ?>
 
         <?= $form->field($model, 'status')->dropDownList(Course::getStatus()) ?>
 

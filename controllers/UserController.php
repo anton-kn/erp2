@@ -73,14 +73,11 @@ class UserController extends Controller {
     public function actionIndex() {
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
-//        $dataProviderUser = new ActiveDataProvider([
-//            'query' => User::find()->where(['type' => User::getAdmin()]),
-//        ]);
+
         
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
-//            'dataProviderUser' => $dataProviderUser,
         ]);
     }
 

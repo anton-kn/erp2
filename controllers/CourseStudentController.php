@@ -77,15 +77,6 @@ class CourseStudentController extends Controller {
         $searchModel = new CourseStudentSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
         
-//        $userIdentity = User::getIdentityUser();
-//        if (isset($userIdentity->type) && $userIdentity->type == User::getAdmin()) {   // если администратор
-//            $courses = Course::find();
-//        }
-//        
-//        if (isset($userIdentity->type) && $userIdentity->type == User::getTeacher()) {   // если администратор
-//            $courses = Course::find()->where(['teacher_id' => $userIdentity->id]);
-//        }
-        
         $courses = Course::find();
         $dataProviderCourse = new ActiveDataProvider([
             'query' => $courses,
@@ -94,7 +85,6 @@ class CourseStudentController extends Controller {
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
-            //'courses' => $courses,
             'dataProviderCourse' => $dataProviderCourse,
         ]);
     }
@@ -126,10 +116,6 @@ class CourseStudentController extends Controller {
             $model->loadDefaultValues();
         }
         $course = Course::findOne($courseId);
-//        echo '<pre>';
-//var_dump($course->name);
-//echo '</pre>';
-//exit();
 
         return $this->render('create', [
             'model' => $model,
@@ -145,17 +131,17 @@ class CourseStudentController extends Controller {
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id) {
+    public function actionUpdate($id, $courseId) {
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
-
+        $course = Course::findOne($courseId);
         return $this->render('update', [
-                    'model' => $model,
-                    'user' => User::getFullName(true),
-                    'course' => Course::getCourses(),
+            'model' => $model,
+            'user' => User::listStudents(),
+            'course' => Course::findOne($courseId),
         ]);
     }
 

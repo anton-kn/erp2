@@ -86,7 +86,9 @@ class LessonController extends Controller {
     public function actionIndex() {
         $searchModel = new LessonSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
-
+        if(!$dataProvider){
+            return $this->goHome();
+        }
         $dataProviderCourse = new ActiveDataProvider([
             'query' => Course::find(),
             
@@ -154,11 +156,11 @@ class LessonController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->findModel($id);
-        $lectures = Lecture::find()->where(['course_id' => $id])->all();
-        $lectureList = [];
-        foreach ($lectures as $lecture) {
-            $lectureList[$lecture->id] = $lecture->name;
-        }
+        //$lectures = Lecture::find()->where(['course_id' => $courseId])->all();
+//        $lectureList = [];
+//        foreach ($lectures as $lecture) {
+//            $lectureList[$lecture->id] = $lecture->name;
+//        }
 
         $places = Place::find()->all();
         $placeList = [];
@@ -171,7 +173,7 @@ class LessonController extends Controller {
 
         return $this->render('update', [
             'model' => $model,
-            'lecture' => $lectureList,
+            'lecture' => $model->lecture,
             'place' => $placeList,
         ]);
     }

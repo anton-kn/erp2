@@ -138,8 +138,12 @@ class Course extends \yii\db\ActiveRecord
         if($userIdentity->type == User::getStudent()){
              // студент может быть записан только на один курс
             $courseStudent = CourseStudent::find()->where(['student_id' => $userIdentity->id])->one();
-            $course = self::find()->where(['id' => $courseStudent->course_id])->one();
-            return [$course->id => $course->name];
+            if($courseStudent){
+                $course = self::find()->where(['id' => $courseStudent->course_id])->one();
+                return [$course->id => $course->name];
+            }
+            return true;
+            
         }
         
         $listCourses = [];

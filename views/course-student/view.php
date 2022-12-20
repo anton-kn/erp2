@@ -6,8 +6,8 @@ use yii\widgets\DetailView;
 /** @var yii\web\View $this */
 /** @var app\models\CourseStudent $model */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Course Students', 'url' => ['index']];
+$this->title = $model->student->firstname;
+$this->params['breadcrumbs'][] = ['label' => 'Группы по курсам', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
@@ -16,8 +16,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+        <?= Html::a('Изменить', ['update', 'id' => $model->id, 'courseId' => $model->course_id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Удалить', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => 'Are you sure you want to delete this item?',

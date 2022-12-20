@@ -51,7 +51,10 @@ class CourseSearch extends Course
         }
         if (isset($identityUser) && $identityUser->type == User::getStudent()) {
             $courseStudent = CourseStudent::find()->where(['student_id' => $identityUser->id])->one();
-            $query = Course::find()->where(['id' => $courseStudent->course_id]);
+            if($courseStudent){
+               $query = Course::find()->where(['id' => $courseStudent->course_id]); 
+            }
+            
         }
 
         $dataProvider = new ActiveDataProvider([

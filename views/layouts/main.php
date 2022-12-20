@@ -54,7 +54,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
                 : '<li class="nav-item">'
                     . Html::beginForm(['/site/logout'])
                     . Html::submitButton(
-                        'Выйти (' . Yii::$app->user->identity->user->surname . ' ' . Yii::$app->user->identity->user->firstname . ')',
+                        'Выйти (' . Yii::$app->user->identity->user->surname . ' ' . Yii::$app->user->identity->user->firstname . ' ' . Yii::$app->user->identity->user->email .')',
                         ['class' => 'nav-link btn btn-link logout']
                     )
                     . Html::endForm()
@@ -78,7 +78,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
                 : '<li class="nav-item">'
                     . Html::beginForm(['/site/logout'])
                     . Html::submitButton(
-                        'Выйти (' . Yii::$app->user->identity->user->surname . ' ' . Yii::$app->user->identity->user->firstname . ')',
+                        'Выйти (' . Yii::$app->user->identity->user->surname . ' ' . Yii::$app->user->identity->user->firstname . ' ' . Yii::$app->user->identity->user->email .')',
                         ['class' => 'nav-link btn btn-link logout']
                     )
                     . Html::endForm()
@@ -94,13 +94,13 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
             ['label' => 'Курс', 'url' => ['/course/index']],
             ['label' => 'Лекции', 'url' => ['/lecture/index']],
             ['label' => 'Занятия по лекциям', 'url' => ['/lesson/index']],
-            ['label' => 'Отметка', 'url' => ['/visit/index']],
+            ['label' => 'Отметки', 'url' => ['/visit/index']],
             Yii::$app->user->isGuest
                 ? ['label' => 'Login', 'url' => ['/site/login']]
                 : '<li class="nav-item">'
                     . Html::beginForm(['/site/logout'])
                     . Html::submitButton(
-                        'Выйти (' . Yii::$app->user->identity->user->surname . ' ' . Yii::$app->user->identity->user->firstname . ')',
+                        'Выйти (' . Yii::$app->user->identity->user->surname . ' ' . Yii::$app->user->identity->user->firstname . ' ' . Yii::$app->user->identity->user->email .')',
                         ['class' => 'nav-link btn btn-link logout']
                     )
                     . Html::endForm()

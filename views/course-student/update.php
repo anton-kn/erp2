@@ -6,10 +6,10 @@ use yii\bootstrap5\ActiveForm;
 /** @var yii\web\View $this */
 /** @var app\models\CourseStudent $model */
 
-$this->title = 'Update Course Student: ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Course Students', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->title = 'Изменить студена ' . $model->student->firstname;
+$this->params['breadcrumbs'][] = ['label' => 'Группы студентов', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $model->student->firstname , 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = 'Изменить';
 ?>
 <div class="course-student-update">
 
@@ -19,9 +19,9 @@ $this->params['breadcrumbs'][] = 'Update';
 
         <?php $form = ActiveForm::begin(); ?>
 
-        <?= $form->field($model, 'course_id')->dropDownList($course)->label('Курсы') ?>
+        <?= $form->field($model, 'course_id')->textInput()->hiddenInput(['value' => $course->id, 'name' => $model->course_id])->label(false) ?>
 
-        <?= $form->field($model, 'student_id')->dropDownList($user)->label('Студенты') ?>
+        <?= $form->field($model, 'student_id')->dropDownList($user)->label('Студент(ы)') ?>
 
         <div class="form-group">
             <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

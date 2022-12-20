@@ -7,9 +7,9 @@ use yii\widgets\ActiveForm;
 /** @var yii\web\View $this */
 /** @var app\models\User $model */
 
-$this->title = User::typeUsers()[$model->type]  . ' ' . $model->firstname;
+$this->title = $model->surname . ' ' . $model->firstname . ' ' . $model->patronymic;
 $this->params['breadcrumbs'][] = ['label' => 'Пользователи' , 'url' => ['index', 'type' => $model->type]];
-$this->params['breadcrumbs'][] = ['label' => $model->firstname, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = ['label' => $model->surname . ' ' . $model->firstname . ' ' . $model->patronymic, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Обновить';
 ?>
 <div class="user-update">

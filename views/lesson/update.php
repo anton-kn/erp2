@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = 'Обновить';
 
         <?php $form = ActiveForm::begin(); ?>
 
-        <?= $form->field($model, 'lecture_id')->dropDownList($lecture) ?>
+        <?= $form->field($model, 'lecture_id')->dropDownList([$lecture->id => $lecture->name]) ?>
 
         <?=
         $form->field($model, 'date')->widget(DatePicker::class, [

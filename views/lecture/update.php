@@ -5,10 +5,10 @@ use yii\bootstrap5\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var app\models\Lecture $model */
-$this->title = 'Update Lecture: ' . $model->name;
+$this->title = 'Изменить лекцию ' . $model->name . ' курса ' .$course->name ;
 $this->params['breadcrumbs'][] = ['label' => 'Lectures', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = 'Изменить';
 ?>
 <div class="lecture-update">
 
@@ -23,11 +23,11 @@ $this->params['breadcrumbs'][] = 'Update';
         <?= $form->field($model, 'name')->textInput([$model->name]) ?>
         
         
-        <?= $form->field($model, 'course_id')->textInput([$course->id])->hiddenInput()->label('Курс: ' . $course->name) ?>
+        <?= $form->field($model, 'course_id')->textInput([$course->id])->hiddenInput()->label(false) ?>
 
 
         <div class="form-group">
-            <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+            <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
         </div>
 
         <?php ActiveForm::end(); ?>
