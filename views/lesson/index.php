@@ -10,12 +10,13 @@ use yii\widgets\ListView;
 use app\models\Lecture;
 use app\models\Place;
 use app\models\User;
-
+//use Yii;
 /** @var yii\web\View $this */
 /** @var app\models\LessonSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 $this->title = 'Все занятия';
 $this->params['breadcrumbs'][] = $this->title;
+
 
 $place = Place::find();
 $places = Place::listPlace();
@@ -53,9 +54,18 @@ $userIdentity = User::getIdentityUser();
                     return $lecture->name;
                 }
             ],
-            'date',
-            'time_start',
-            'time_end',
+            [
+                'attribute' => 'date',
+                'format'=>'date',
+            ],
+            [
+                'attribute' => 'time_start',
+                'format'=>'time',
+            ],
+            [
+                'attribute' => 'time_end',
+                'format'=>'time',
+            ],
             'place_id' =>
             [
                 'attribute' => 'place_id',
