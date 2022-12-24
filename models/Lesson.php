@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use app\models\User;
+use app\models\Course;
 
 /**
  * This is the model class for table "lesson".
@@ -55,7 +57,6 @@ class Lesson extends \yii\db\ActiveRecord
         ];
     }
     
-    
 
     /**
      * Gets query for [[Place]].
@@ -74,6 +75,33 @@ class Lesson extends \yii\db\ActiveRecord
     
     public function getVisit(){
         return $this->hasOne(Visit::class, ['lesson_id' => 'id']);
+    }
+    
+    /**
+     * Список занятий для преподавателя и для админанистратора
+     */
+    public function listLesson(){
+        $userIdentity = User::getIdentityUser();
+        $listNameLesson = [];
+        if($userIdentity->type == User::getAdmin()){
+           $lessons = self::find()->all();
+           foreach ($lessons as $lesson){
+               $listNameLesson[$lesson->id] = $lesson->lecture->name;
+           }
+        }
+        if($userIdentity->type == User::getTeacher()){
+           $courses = Course::find()->where(['teacher_id' => $userIdentity->id])->all();
+           foreach ($courses as $course){
+               $lectures = $course->lectures;
+               foreach ($lectures as $lecture){
+                   $listNameLesson[$lecture->lesson->id] = $lecture->name;
+               }
+               
+           }
+           
+        }
+        return $listNameLesson;
+
     }
 
     /**

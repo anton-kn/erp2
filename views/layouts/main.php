@@ -48,6 +48,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
             ['label' => 'Пользователи', 'url' => ['/user/index']],
             ['label' => 'Группы по курсам', 'url' => ['/course-student/index']],
             ['label' => 'Занятия по лекциям', 'url' => ['/lesson/index']],
+            ['label' => 'Оценки по всем занятия', 'url' => ['/visit/index']],
             ['label' => 'Адреса', 'url' => ['/place/index']],
             Yii::$app->user->isGuest
                 ? ['label' => 'Login', 'url' => ['/site/login']]
@@ -69,10 +70,9 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         'items' => [
             ['label' => 'Курсы', 'url' => ['/course/index']],
             ['label' => 'Лекции', 'url' => ['/lecture/index']],
-//            ['label' => 'Студенты', 'url' => ['/user/index']],
             ['label' => 'Группы по курсам', 'url' => ['/course-student/index']],
             ['label' => 'Занятия по лекциям', 'url' => ['/lesson/index']],
-            //['label' => 'Адреса', 'url' => ['/place/index']],
+            ['label' => 'Оценки по всем занятия', 'url' => ['/visit/index']],
             Yii::$app->user->isGuest
                 ? ['label' => 'Login', 'url' => ['/site/login']]
                 : '<li class="nav-item">'
@@ -94,7 +94,6 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
             ['label' => 'Курс', 'url' => ['/course/index']],
             ['label' => 'Лекции', 'url' => ['/lecture/index']],
             ['label' => 'Занятия по лекциям', 'url' => ['/lesson/index']],
-            ['label' => 'Отметки', 'url' => ['/visit/index']],
             Yii::$app->user->isGuest
                 ? ['label' => 'Login', 'url' => ['/site/login']]
                 : '<li class="nav-item">'
@@ -134,8 +133,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 <footer id="footer" class="mt-auto py-3 bg-light">
     <div class="container">
         <div class="row text-muted">
-            <div class="col-md-6 text-center text-md-start">&copy; My Company <?= date('Y') ?></div>
-            <div class="col-md-6 text-center text-md-end"><?= Yii::powered() ?></div>
+            <div class="col-md-6 text-center text-md-start">&copy; erp Цифра <?= date('Y') ?></div>
         </div>
     </div>
 </footer>

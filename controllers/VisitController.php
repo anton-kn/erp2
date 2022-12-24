@@ -32,7 +32,7 @@ class VisitController extends Controller {
                 [
                     'access' => [
                         'class' => AccessControl::class,
-                        'only' => ['logout', 'index', 'create', 'update', 'view', 'delete'],
+                        'only' => ['logout', 'index', 'create', 'update', 'view', 'delete', 'error'],
                         'rules' =>
                         [
                             [
@@ -52,7 +52,7 @@ class VisitController extends Controller {
                                 'roles' => ['@'],
                             ],
                             [
-                                'actions' => ['logout', 'index', 'create', 'update', 'view', 'delete'],
+                                'actions' => ['logout', 'index', 'update', 'view', 'delete', 'error'],
                                 'allow' => true,
                                 'matchCallback' => function ($rule, $action) use ($user) {
                                     return $user->type == User::getStudent();
@@ -86,8 +86,10 @@ class VisitController extends Controller {
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
-                    'searchModel' => $searchModel,
-                    'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'user' => new User(),
+            'lesson' => new Lesson(),
         ]);
     }
 
@@ -99,8 +101,33 @@ class VisitController extends Controller {
      */
     public function actionView($id) {
         return $this->render('view', [
-                    'model' => $this->findModel($id),
+            'model' => $this->findModel($id),
         ]);
+    }
+    
+    /*
+     * Студент, который не был на занятии не может оценивать
+     * занятие
+     */
+    public function beforeAction($action) {
+        if (!parent::beforeAction($action)) {
+            return false;
+        }
+
+        if($action->id == 'create'){
+            $model = new Visit();
+            $isStudent = $model->isSetStudent(Yii::$app->user->identity->user->id, Yii::$app->request->get('lessonId'));
+            if(isset($isStudent)){
+                return true;
+            }else{
+               return $this->redirect(['error']); 
+            }
+        }
+        return true;
+    }
+    
+    public function actionError(){
+        return $this->render('error');
     }
 
     /**
@@ -110,7 +137,7 @@ class VisitController extends Controller {
      */
     public function actionCreate($lessonId) {
         $model = new Visit();
-
+        
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -124,10 +151,10 @@ class VisitController extends Controller {
         $student = User::find()->where(['id' => $userIdentity->id])->one();
 
         return $this->render('create', [
-                    'model' => $model,
-                    'lesson' => $lesson,
-                    'student' => $student,
-                    'rate' => Visit::rateLesson(),
+            'model' => $model,
+            'lesson' => $lesson,
+            'student' => $student,
+            'rate' => Visit::rateLesson(),
         ]);
     }
 
@@ -138,21 +165,22 @@ class VisitController extends Controller {
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id) {
-        $model = $this->findModel($id);
+    public function actionUpdate($lessonId) {
+        //$model = $this->findModel($lessonId);
+        $model = Visit::find()
+                ->andWhere(['lesson_id' => $lessonId])
+                ->andWhere(['student_id' => Yii::$app->user->identity->user->id])->one();
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['lesson/index']);
         }
 
-        $lesson = Lesson::findOne($id);
-        $userIdentity = User::getIdentityUser();
-        $student = User::find()->where(['id' => $userIdentity->id])->one();
-
+        $lesson = Lesson::findOne($lessonId);
+      
         return $this->render('update', [
                     'model' => $model,
                     'lesson' => $lesson,
-                    'student' => $student,
+                    //'student' => $student,
                     'rate' => Visit::rateLesson(),
         ]);
     }
@@ -171,31 +199,42 @@ class VisitController extends Controller {
     }
 
     /**
-     * Отмечает студентов на занятии
+     * Функция отмечает студентов на занятии
      */
     public function actionVisitStudents($lessonId) {
         $model = new Visit();
-        
+
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
+
+            $isVisit = $model->find()
+                    ->andWhere(['lesson_id' => $this->request->post()['Visit']['lesson_id'] ])
+                    ->andWhere(['student_id' => $this->request->post()['Visit']['student_id'] ])->one();
+            if (isset($isVisit)) {
                 return $this->render('visit-students', [
                     'model' => $model,
                     'students' => User::studentsByLesson($lessonId),
                     'lesson' => Lesson::findOne($lessonId),
-                    'visit' => $model->find(),
                     'lessonId' => $lessonId,
                 ]);
+            } else {
+                if ($model->load($this->request->post()) && $model->save()) {
+                    return $this->render('visit-students', [
+                        'model' => $model,
+                        'students' => User::studentsByLesson($lessonId),
+                        'lesson' => Lesson::findOne($lessonId),
+                        'lessonId' => $lessonId,
+                    ]);
+                }
             }
         } else {
             $model->loadDefaultValues();
         }
 
         return $this->render('visit-students', [
-            'model' => $model,
-            'students' => User::studentsByLesson($lessonId),
-            'lesson' => Lesson::findOne($lessonId),
-            'visit' => $model->find(),
-            'lessonId' => $lessonId,
+                    'model' => $model,
+                    'students' => User::studentsByLesson($lessonId),
+                    'lesson' => Lesson::findOne($lessonId),
+                    'lessonId' => $lessonId,
         ]);
     }
 

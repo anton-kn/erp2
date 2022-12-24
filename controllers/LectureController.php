@@ -127,18 +127,13 @@ class LectureController extends Controller {
         } else {
             $model->loadDefaultValues();
         }
-        
-        //$teacher = User::getIdentityUser();
-//        $course = Course::find()->where(['teacher_id' => $teacher->id])->all();
+
         $course = Course::findOne($courseId);
-//        $courseList = [];
-//        foreach ($courses as $course) {
-//            $courseList[$course->id] = $course->name;
-//        }
 
         return $this->render('create', [
             'model' => $model,
             'course' => $course,
+            'courseId' => $courseId,
         ]);
     }
 

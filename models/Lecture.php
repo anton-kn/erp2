@@ -19,6 +19,9 @@ use app\models\Course;
 class Lecture extends \yii\db\ActiveRecord
 {
     private $countNum;
+    //private $num;
+    
+    private $courseId;
     /**
      * {@inheritdoc}
      */
@@ -89,11 +92,15 @@ class Lecture extends \yii\db\ActiveRecord
      * $count = n (т.е. $count > 0) return $num = n+1 
      */
     
-    public static function autoNum($courseId){
+    public function autoNum($courseId){
         // находим курс
-        $course = Course::findAll($courseId);
+        $course = Course::findOne($courseId);
         // определить количество лекций в lecture для определенного курса
         $this->countNum = self::find()->where(['course_id' => $course->id])->count();
+//        echo '<pre>';
+//var_dump($this->countNum);
+//echo '</pre>';
+//exit();
         if(!$this->countNum){
             return '1';
         }
@@ -103,14 +110,48 @@ class Lecture extends \yii\db\ActiveRecord
         
     }
     
-    public function beforeSave($insert) {
-        if (!parent::beforeSave($insert)) {
-            return false;
-        }
-        
-        for($i = 1; $i <= $this->countNum; $i++){
-            $this->num = $i;
-        }
+//    public function beforeSave($insert) {
+//        if (!parent::beforeSave($insert)) {
+//            return false;
+//        }
+//        $courseId = Yii::$app->request->get('courseId');
+//        $this->num = $this->autoNum($courseId);
+//        return true;
+//    }
+    
+    public function beforeDelete() {
+        parent::beforeDelete();
+        $lecetureId = Yii::$app->request->get('id'); // id лекции, которую удалили
+        $lecture = self::findOne($lecetureId);
+        $this->courseId = $lecture->course->id;
         return true;
     }
+
+
+    public function afterDelete() {
+        parent::afterDelete();
+        
+        $lectures = self::find()->where(['course_id' => $this->courseId])->all();
+            
+        $i = 0;
+        foreach ($lectures as $lecture){
+            $i++;
+            $lecture->num = $i;
+            $lecture->save();
+           
+        }
+        
+//         echo '<pre>';
+//            var_dump($lecture);
+//            echo '</pre>';
+//            exit();
+        
+        return true;
+        
+//                echo '<pre>';
+//            var_dump($request);
+//            echo '</pre>';
+//            exit();
+    }
+    
 }

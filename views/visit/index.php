@@ -10,7 +10,14 @@ use yii\widgets\Pjax;
 /** @var app\models\VisitSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Visits';
+$users = $user->studentsOfCourseIdentityUser();
+$lessons = $lesson->listLesson();
+//echo '<pre>';
+//var_dump($lessons);
+//echo '</pre>';
+//exit();
+
+$this->title = 'Все оценки по занятиям';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="visit-index">
@@ -28,8 +35,24 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'student_id',
-            'lesson_id',
+            [
+                'attribute' => 'student_id',
+                'value' => function ($data) use ($user) {
+                    $student = $user->findOne($data->student_id);
+                    return $student->firstname . ' ' . $student->surname . ' ' . $student->patronymic;
+                },
+                'filter' => $users,
+                'filterInputOptions' => ['prompt' => 'Все', 'class' => 'form-control', 'id' => null],
+            ],
+            [
+                'attribute' => 'lesson_id',
+                'value' => function ($data) use ($lesson) {
+                    $lesson = $lesson->findOne($data->lesson_id);
+                    return $lesson->lecture->name;
+                },
+                'filter' => $lessons,
+                'filterInputOptions' => ['prompt' => 'Все', 'class' => 'form-control', 'id' => null],
+            ],
             'rate',
             [
                 'class' => ActionColumn::className(),

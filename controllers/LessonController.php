@@ -14,6 +14,7 @@ use app\models\Lecture;
 use app\models\Course;
 use yii\data\ActiveDataProvider;
 use app\models\Place;
+use app\models\Visit;
 
 /**
  * LessonController implements the CRUD actions for Lesson model.
@@ -93,11 +94,12 @@ class LessonController extends Controller {
             'query' => Course::find(),
             
         ]);
-
+        
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'dataProviderCourse' => $dataProviderCourse
+            'dataProviderCourse' => $dataProviderCourse,
+            'visit' => new Visit(),
         ]);
     }
 

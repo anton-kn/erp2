@@ -1,15 +1,14 @@
 <?php
 
 use yii\helpers\Html;
-//use yii\widgets\ActiveForm;
 use yii\bootstrap5\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var app\models\Visit $model */
-$this->title = 'За занятие ' . $lesson->lecture->name;
-$this->params['breadcrumbs'][] = ['label' => 'Отметки', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $lesson->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Изменить';
+$this->title = 'Оценка по теме: ' . $lesson->lecture->name;
+$this->params['breadcrumbs'][] = ['label' => 'Назад', 'url' => ['lesson/index']];
+//$this->params['breadcrumbs'][] = ['label' => $lesson->id, 'url' => ['view', 'id' => $model->id]];
+//$this->params['breadcrumbs'][] = '';
 ?>
 <div class="visit-update">
 
@@ -19,9 +18,9 @@ $this->params['breadcrumbs'][] = 'Изменить';
 
         <?php $form = ActiveForm::begin(); ?>
 
-        <?= $form->field($model, 'student_id')->textInput()->hiddenInput(['value' => $student->id])->label(false) ?>
+        <?= $form->field($model, 'student_id')->textInput()->hiddenInput(['value' => $model->student_id])->label(false) ?>
 
-        <?= $form->field($model, 'lesson_id')->textInput()->hiddenInput(['value' => $lesson->id])->label(false) ?>
+        <?= $form->field($model, 'lesson_id')->textInput()->hiddenInput(['value' => $model->lesson_id])->label(false) ?>
 
         <?= $form->field($model, 'rate')->textInput()->dropDownList($rate, ['class' => 'orm-select', 'size' => '5']) ?>
 

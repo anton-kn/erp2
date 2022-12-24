@@ -3,6 +3,9 @@
 use yii\helpers\Html;
 use yii\bootstrap5\ActiveForm;
 
+
+
+$num = $model->autoNum($courseId);
 /** @var yii\web\View $this */
 /** @var app\models\Lecture $model */
 $this->title = 'Новая лекция для курса ' . $course->name;
@@ -17,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
         <?php $form = ActiveForm::begin(); ?>
 
-        <?= $form->field($model, 'num')->textInput() ?>
+        <?= $form->field($model, 'num')->hiddenInput(['value' => $num])->label('Номер лекции: ' . $num) ?>
 
         <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 

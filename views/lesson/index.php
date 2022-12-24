@@ -22,6 +22,8 @@ $place = Place::find();
 $places = Place::listPlace();
 $lecture = new Lecture();
 $userIdentity = User::getIdentityUser();
+$visitStudent = $visit;
+    
 ?>
 <div class="lesson-index">
 
@@ -83,9 +85,18 @@ $userIdentity = User::getIdentityUser();
                     'course' => true,
                 ],
                 'buttons' => [
-                    'course' => function ($url, $model, $key) use ($userIdentity) {
+                    'course' => function ($url, $model, $key) use ($userIdentity, $visitStudent) {
                         if ($userIdentity->type == User::getStudent()) {
-                            return Html::a('Оценить', ['/visit/create', 'lessonId' => $model->id], ['class' => 'btn btn-link', 'data-pjax' => 0,]);
+                            $isStudent = $visitStudent->isSetStudent($userIdentity->id,  $model->id) ; 
+                            if(isset($isStudent)){
+                                $rate = $isStudent->rate;
+                                if(isset($rate)){
+                                   return Html::a('Изменить', ['visit/update', 'lessonId' => $model->id], ['class' => 'btn btn-warning', 'data-pjax' => 0,]); 
+                                }
+                                return Html::a('Оценить', ['visit/update', 'lessonId' => $model->id], ['class' => 'btn btn-primary', 'data-pjax' => 0,]);
+                            }else{
+                                return Html::a('Оценить', ['lesson/index'], ['class' => 'btn btn-secondary disabled', 'data-pjax' => 0,]);
+                            }
                         }
                         if ($userIdentity->type == User::getTeacher()) {
                             return Html::a('Отметить студентов', ['/visit/visit-students', 'lessonId' => $model->id], ['class' => 'btn btn-link', 'data-pjax' => 0,]);

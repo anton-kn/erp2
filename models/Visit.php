@@ -17,6 +17,9 @@ use Yii;
  */
 class Visit extends \yii\db\ActiveRecord {
 
+    private $student_id;
+    private $lesson_id;
+    private $rating;
     /**
      * {@inheritdoc}
      */
@@ -81,6 +84,30 @@ class Visit extends \yii\db\ActiveRecord {
      */
     public static function rateLesson() {
         return ['1' => 1, '2' => 2, '3' => 3, '4' => 4, '5' => 5];
+    }
+    
+    /**
+     * Проверка присутствовал ли студент на занятии 
+     */
+    
+    public function isSetStudent(int $student, int $lesson){
+        $isStudent = self::find()
+            ->andWhere(['student_id' => $student])
+            ->andWhere(['lesson_id' => $lesson])->one();
+        //$this->rating = $isStudent->rate;
+//        echo '<pre>';
+//        var_dump($isStudent->rate);
+//        echo '</pre>';
+//        exit();
+        
+        return $isStudent;
+    }
+    
+    /**
+     * Возвращает оценку за занятие
+     */
+    public function isRate(){
+        return $this->rate;
     }
 
 }

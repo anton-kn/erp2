@@ -52,20 +52,6 @@ $course = Course::find();
                 'filterInputOptions' => ['prompt' => 'Все', 'class' => 'form-control', 'id' => null],
             ],
             'rate',
-//            [
-//                'class' => 'yii\grid\ActionColumn',
-//                'template' => '{course}',
-//                'visibleButtons' => [
-//                    'course' => true,
-//                ],
-//                'buttons' => [
-//                    'course' => function ($url, $model, $key) {
-//                        return Html::a('Занятия', ['/lesson/index', 'lectureId'=>$model->id], ['class' => 'btn btn-link', 'data-pjax' => 0,]);
-//                    },
-//                ],
-//                
-//            ],
-            
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Lecture $model, $key, $index, $column) {

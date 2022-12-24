@@ -113,8 +113,6 @@ class User extends \yii\db\ActiveRecord {
         ];
     }
     
-    
-    
 
     public static function getAdmin() {
         return self::TYPE_ADMIN;
@@ -147,19 +145,19 @@ class User extends \yii\db\ActiveRecord {
     }
     
     /**
-     * Список студентов через список занятия
+     * Список студентов занятия
      */
     public static function studentsByLesson($lessonId)
     {
         $lesson = Lesson::findOne($lessonId);
-        $courseId = $lesson->lecture->course_id; // находим id курса в лекции
+        $courseId = $lesson->lecture->course_id; 
         $courseStudents = CourseStudent::find()->where(['course_id' => $courseId])->all();
         $studentId = [];
         foreach ($courseStudents as $student){
             $studentId[] = $student->student_id;
         }
         
-        return self::find()->where(['id' => $studentId])->all(); // студенты занятия
+        return self::find()->where(['id' => $studentId])->all(); 
     }
     
     /**
