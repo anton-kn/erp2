@@ -12,6 +12,7 @@ use app\models\User;
 use Yii;
 use yii\filters\AccessControl;
 use yii\data\ActiveDataProvider;
+use \app\models\CourseStudent;
 
 /**
  * VisitController implements the CRUD actions for Visit model.
@@ -84,6 +85,8 @@ class VisitController extends Controller {
     public function actionIndex() {
         $searchModel = new VisitSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
+        
+        
 
         return $this->render('index', [
             'searchModel' => $searchModel,

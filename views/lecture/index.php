@@ -12,17 +12,21 @@ use app\models\User;
 //use Yii;
 use app\models\Lesson;
 
-/** @var yii\web\View $this */
-/** @var yii\data\ActiveDataProvider $dataProvider */
-$this->title = 'Лекции по курсам';
-$this->params['breadcrumbs'][] = $this->title;
-
 $courses = Course::listCourses();
 $course = Course::find();
+$userIdentity = User::getIdentityUser();
+
+/** @var yii\web\View $this */
+/** @var yii\data\ActiveDataProvider $dataProvider */
+$this->title = 'Лекции';
+$this->params['breadcrumbs'][] = $this->title;
+
+
 ?>
 <div class="lecture-index">
-
     <h2><?= Html::encode($this->title) ?></h2>
+    
+    
     <?php if (Yii::$app->user->identity->user->type == User::getTeacher()) { ?>
         <?=
         ListView::widget([

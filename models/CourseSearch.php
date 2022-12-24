@@ -6,6 +6,8 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Course;
 use app\models\User;
+use Yii;
+use yii\helpers\Url;
 
 /**
  * CourseSearch represents the model behind the search form of `app\models\Course`.
@@ -43,7 +45,7 @@ class CourseSearch extends Course
     public function search($params)
     {
         $identityUser = User::getIdentityUser();
-        if (isset($identityUser->is_admin)) {
+        if (isset($identityUser) && $identityUser->type == User::getAdmin()) {
             $query = Course::find();
         }
         if (isset($identityUser) && $identityUser->type == User::getTeacher()) {
@@ -53,8 +55,9 @@ class CourseSearch extends Course
             $courseStudent = CourseStudent::find()->where(['student_id' => $identityUser->id])->one();
             if($courseStudent){
                $query = Course::find()->where(['id' => $courseStudent->course_id]); 
+            }else{
+               $query = Course::find()->where(['id' => null]);
             }
-            
         }
 
         $dataProvider = new ActiveDataProvider([

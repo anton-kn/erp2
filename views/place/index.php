@@ -10,7 +10,7 @@ use app\models\User;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Адресы';
+$this->title = 'Адреса';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="place-index">

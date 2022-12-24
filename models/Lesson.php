@@ -93,13 +93,7 @@ class Lesson extends \yii\db\ActiveRecord
            $courses = Course::find()->where(['teacher_id' => $userIdentity->id])->all();
            foreach ($courses as $course){
                $lectures = $course->lectures;
-          
-
                foreach ($lectures as $lecture){
-//                      echo '<pre>';
-//                 var_dump($lecture->lesson->id);
-//                 echo '</pre>';
-//                 exit();
                    if(isset($lecture->lesson->id)){
                        $listNameLesson[$lecture->lesson->id] = $lecture->name;
                    }
@@ -109,10 +103,6 @@ class Lesson extends \yii\db\ActiveRecord
            }
            
         }
-//                             echo '<pre>';
-//                 var_dump($listNameLesson);
-//                 echo '</pre>';
-//                 exit();
         return $listNameLesson;
 
     }

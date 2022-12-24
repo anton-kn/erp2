@@ -52,6 +52,7 @@ class LessonSearch extends Lesson {
                     $listLesson[$lecture->id] = $lecture->lesson;
                 }
             }
+
             $query = Lesson::find()->where(['id' => $listLesson]);
         }
 
@@ -64,7 +65,7 @@ class LessonSearch extends Lesson {
                 }
                 $query = Lesson::find()->where(['id' => $listLesson]);
             }else{
-                return true;
+               $query = Lesson::find()->where(['id' => null]);
             }
         }
 

@@ -59,7 +59,7 @@ class LectureSearch extends Lecture {
                 if($сourse){
                     $query = Lecture::find()->where(['course_id' => $сourse->course_id]);
                 }else{
-                    $query = Lecture::find();
+                    $query = Lecture::find()->where(['id' => null]);
                 }
                 
             }

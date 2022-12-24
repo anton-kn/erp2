@@ -9,13 +9,12 @@ use app\models\Visit;
 /**
  * VisitSearch represents the model behind the search form of `app\models\Visit`.
  */
-class VisitSearch extends Visit
-{
+class VisitSearch extends Visit {
+
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['id', 'student_id', 'lesson_id', 'rate'], 'integer'],
         ];
@@ -24,8 +23,7 @@ class VisitSearch extends Visit
     /**
      * {@inheritdoc}
      */
-    public function scenarios()
-    {
+    public function scenarios() {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -37,11 +35,29 @@ class VisitSearch extends Visit
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
-    {
-        $query = Visit::find();
+    public function search($params) {
+        
 
         // add conditions that should always apply here
+
+        $userIdentity = User::getIdentityUser();
+        if ($userIdentity->type == User::getTeacher()) {
+            $courses = Course::find()->where(['teacher_id' => $userIdentity->id])->all();
+
+            $listStudents = [];
+            foreach ($courses as $course) {
+                $students = $course->courseStudents;
+                foreach ($students as $student) {
+                    $listStudents[] = $student->student->id;
+                }
+            }
+            
+            $query = Visit::find()->where(['student_id' => $listStudents]);
+        }
+        
+        if($userIdentity->type == User::getAdmin()){
+            $query = Visit::find();
+        }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -65,4 +81,5 @@ class VisitSearch extends Visit
 
         return $dataProvider;
     }
+
 }
